@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">DouNiuClient</string>
+    <string name="hello_world">Hello world!</string>
+    
+    <string name="str_no_niu">no niu</string>
+    <string name="str_niu_1">niu 1</string>
+    <string name="str_niu_2">niu 2</string>
+    <string name="str_niu_3">niu 3</string>
+    <string name="str_niu_4">niu 4</string>
+    <string name="str_niu_5">niu 5</string>
+    <string name="str_niu_6">niu 6</string>
+    <string name="str_niu_7">niu 7</string>
+    <string name="str_niu_8">niu 8</string>
+    <string name="str_niu_9">niu 9</string>
+    <string name="str_niu_niu">niu niu</string>
+    <string name="str_five_hua">5 hua</string>
+    <string name="str_four_hua">4 hua</string>
+    <string name="str_zha_dan">zha dan</string>
+</resources>

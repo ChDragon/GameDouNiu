@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+    
+    <LinearLayout android:id="@+id/layout_username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+         >
+        <TextView
+            android:id="@+id/username_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="用户名" >
+        </TextView>
+        <EditText
+            android:id="@+id/username_et"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:hint="username"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/layout_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_username"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+        <TextView
+            android:id="@+id/password_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="密    码" >
+        </TextView>
+        <EditText
+            android:id="@+id/password_et"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:hint="password"
+            android:imeOptions="actionNext"
+            android:inputType="textPassword" />
+    </LinearLayout>
+    
+	<Button
+        android:id="@+id/account_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="账户登录"
+        android:layout_below="@id/layout_password"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp" />
+	
+	<Button
+        android:id="@+id/visitor_login_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="游客登录"
+        android:layout_below="@id/account_login_btn"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp" />
+	
+	 <EditText
+            android:id="@+id/network_et"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_below="@id/visitor_login_btn"
+            android:text="127.0.0.1"
+            android:hint="127.0.0.1"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+</RelativeLayout>

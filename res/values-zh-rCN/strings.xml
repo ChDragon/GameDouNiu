@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">斗牛</string>
+    
+    <string name="str_no_niu">没牛</string>
+    <string name="str_niu_1">牛二</string>
+    <string name="str_niu_2">牛二</string>
+    <string name="str_niu_3">牛三</string>
+    <string name="str_niu_4">牛四</string>
+    <string name="str_niu_5">牛五</string>
+    <string name="str_niu_6">牛六</string>
+    <string name="str_niu_7">牛七</string>
+    <string name="str_niu_8">牛八</string>
+    <string name="str_niu_9">牛九</string>
+    <string name="str_niu_niu">牛牛</string>
+    <string name="str_five_hua">五花牛</string>
+    <string name="str_four_hua">四花牛</string>
+    <string name="str_zha_dan">炸弹</string>
+</resources>

@@ -1,0 +1,208 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <!-- TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" /> -->
+        
+    <ImageView
+        android:id="@+id/player1_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/head_land" />
+    <TextView
+        android:id="@+id/player1_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/player1_image"
+        android:layout_alignBottom="@id/player1_image"
+        android:layout_marginLeft="10dp"
+        android:textSize="24sp"
+        android:text="牛" >
+    </TextView>
+    <LinearLayout
+        android:id="@+id/player1_cardlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/player1_image"
+        android:layout_marginTop="15dp" >
+        <TextView
+            android:id="@+id/player1_card1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="1" >
+        </TextView>
+        <TextView
+            android:id="@+id/player1_card2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="2" >
+        </TextView>
+        <TextView
+            android:id="@+id/player1_card3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="3" >
+        </TextView>
+        <TextView
+            android:id="@+id/player1_card4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="4" >
+        </TextView>
+        <TextView
+            android:id="@+id/player1_card5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="5" >
+        </TextView>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/player2_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/head_farmer" />
+    <TextView
+        android:id="@+id/player2_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/player2_image"
+        android:layout_alignBottom="@id/player2_image"
+        android:layout_marginRight="10dp"
+        android:textSize="24sp"
+        android:text="牛" >
+    </TextView>
+    <LinearLayout
+        android:id="@+id/player2_cardlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/player2_image"
+        android:layout_marginTop="15dp" >
+
+        <TextView
+            android:id="@+id/player2_card1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="1" >
+        </TextView>
+        <TextView
+            android:id="@+id/player2_card2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="2" >
+        </TextView>
+        <TextView
+            android:id="@+id/player2_card3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="3" >
+        </TextView>
+        <TextView
+            android:id="@+id/player2_card4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="4" >
+        </TextView>
+        <TextView
+            android:id="@+id/player2_card5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="5" >
+        </TextView>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/player3_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/head_farmer" />
+    <TextView
+        android:id="@+id/player3_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/player3_image"
+        android:layout_alignTop="@id/player3_image"
+        android:layout_marginLeft="10dp"
+        android:textSize="24sp"
+        android:text="牛" >
+    </TextView>
+    <LinearLayout
+        android:id="@+id/player3_cardlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_above="@+id/player3_image"
+        android:layout_marginBottom="15dp" >
+        <TextView
+            android:id="@+id/player3_card1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="1" >
+        </TextView>
+        <TextView
+            android:id="@+id/player3_card2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="2" >
+        </TextView>
+        <TextView
+            android:id="@+id/player3_card3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="3" >
+        </TextView>
+        <TextView
+            android:id="@+id/player3_card4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="4" >
+        </TextView>
+        <TextView
+            android:id="@+id/player3_card5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="5" >
+        </TextView>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/start_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/game_bt_start" />
+</RelativeLayout>
