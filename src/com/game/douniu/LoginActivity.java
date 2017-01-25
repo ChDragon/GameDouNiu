@@ -41,7 +41,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login_layout);
-
+		
 		usernameEt = (EditText)findViewById(R.id.username_et);
 		passwordEt = (EditText)findViewById(R.id.password_et);
 		ipAddrEt = (EditText)findViewById(R.id.network_et);

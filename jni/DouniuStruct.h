@@ -57,10 +57,12 @@ typedef struct GAME_INFO {
 }GameInfo;
 
 typedef struct USER_INFO {
-	int id;
+	//int id;
 	char name[MAX_NAME_LEN];
-	char ipaddr[MAX_IP_ADDR_LEN];
 	long money;
+
+	int deskId;
+	char ipaddr[MAX_IP_ADDR_LEN];
 	long login_time;
 	bool isPrepared;
 	enum TRYING_BANKER_STATUS bankerStatus;

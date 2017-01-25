@@ -111,6 +111,10 @@ int loginCMD(char *username, char *password)
 	if((len=read(sockfd,buff,MAXLINE))>0)
     {
         buff[len]=0;
+		if (buff[len-1]=='\n')
+		{
+			buff[len-1]=0;
+		}
         printf("[C<-S][loginCMD]resp: %s\n\n",buff);
 
 		memset(data, 0, sizeof(data));
@@ -355,122 +359,152 @@ void * receiver_looper(void * p){
 	char * data[DATA_LEN];
 	char * str, *subtoken;
 	int i;
+
+	char currBuff[MAXLINE];
 	
     while(1)
     {
         if((len=read(sockfd,buff,MAXLINE))>0)
         {
             buff[len]=0;
-            printf("[C<-S][receiver_looper]buff:%s\n",buff);
+			if (buff[len-1]=='\n')
+			{
+				buff[len-1]=0;
+			}
+			printf("[C<-S][receiver_looper]buff:%s\n",buff);
 
-			memset(data, 0, sizeof(data));
-			for(str = buff, i = 0; ; str = NULL, i++){
-				subtoken = strtok(str, DATA_TOK);
-				if(subtoken == NULL)
+			char * pLeft = buff;
+			char * pos = NULL;
+			do
+			{
+				memset(currBuff, 0, sizeof(currBuff));
+				pos = strchr(pLeft, '\n');
+				if (pos)
+				{
+					//printf(">>>>>>pos not NULL\n");
+					int currSize = pos - pLeft;
+					strncpy(currBuff,pLeft,currSize);
+					pLeft = pos + 1;
+				}
+				else
+				{
+					//printf(">>>>>>pos NULL\n");
+					strcpy(currBuff,pLeft);
+				}
+				if (strlen(currBuff) <= 1)
+				{
+					//printf(">>>>>>currBuff only one char, skip\n");
+					continue;
+				}
+
+				memset(data, 0, sizeof(data));
+				for(str = currBuff, i = 0; ; str = NULL, i++){
+					subtoken = strtok(str, DATA_TOK);
+					if(subtoken == NULL)
+						break;
+					data[i] = subtoken;
+					printf("> data[%d] = %s\n", i, subtoken);
+				}
+
+				switch(data[OFT_CMD][0]){
+				case CMD_LIST:
+					printf("[receiver_looper]CMD_LIST\n");
+					format_user_list(data[OFT_DAT]);
 					break;
-				data[i] = subtoken;
-				printf("> data[%d] = %s\n", i, subtoken);
-			}
+				case CMD_S2C_USER_IN:
+					printf("[receiver_looper]CMD_S2C_USER_IN\n");
+#ifdef USE_IN_ANDROID
+					otherLoginCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+#endif
+					break;
+					
+				case CMD_S2C_USER_OUT:
+					printf("[receiver_looper]CMD_S2C_USER_OUT\n");
+					break;
+				case CMD_LOGOUT:
+					printf("[receiver_looper]CMD_LOGOUT\n");
+					printf("> %s \n", data[OFT_DAT]);
+					exit(0);
 
-			switch(data[OFT_CMD][0]){
-			case CMD_LIST:
-				printf("[receiver_looper]CMD_LIST\n");
-				format_user_list(data[OFT_DAT]);
-				break;
-			case CMD_S2C_USER_IN:
-				printf("[receiver_looper]CMD_S2C_USER_IN\n");
+				case CMD_PREPARE:
+					printf("[receiver_looper]CMD_PREPARE\n");
 #ifdef USE_IN_ANDROID
-				otherLoginCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					prepareCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-				
-			case CMD_S2C_USER_OUT:
-				printf("[receiver_looper]CMD_S2C_USER_OUT\n");
-				break;
-			case CMD_LOGOUT:
-				printf("[receiver_looper]CMD_LOGOUT\n");
-				printf("> %s \n", data[OFT_DAT]);
-				exit(0);
-
-			case CMD_PREPARE:
-				printf("[receiver_looper]CMD_PREPARE\n");
+					break;
+				case CMD_S2C_USER_PREP:
+					printf("[receiver_looper]CMD_S2C_USER_PREP\n");
 #ifdef USE_IN_ANDROID
-				prepareCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					otherUserPrepareCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-			case CMD_S2C_USER_PREP:
-				printf("[receiver_looper]CMD_S2C_USER_PREP\n");
+					break;
+				case CMD_S2C_WILL_BANKER:
+					printf("[receiver_looper]CMD_S2C_WILL_BANKER\n");
 #ifdef USE_IN_ANDROID
-				otherUserPrepareCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					willBankerCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-			case CMD_S2C_WILL_BANKER:
-				printf("[receiver_looper]CMD_S2C_WILL_BANKER\n");
+					break;
+					
+				case CMD_TRYINGBANKER:
+					printf("[receiver_looper]CMD_TRYINGBANKER\n");
 #ifdef USE_IN_ANDROID
-				willBankerCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					tryBankerCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-				
-			case CMD_TRYINGBANKER:
-				printf("[receiver_looper]CMD_TRYINGBANKER\n");
+					break;
+				case CMD_S2C_WILL_STAKE:
+					printf("[receiver_looper]CMD_S2C_WILL_STAKE\n");
 #ifdef USE_IN_ANDROID
-				tryBankerCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					willStakeCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-			case CMD_S2C_WILL_STAKE:
-				printf("[receiver_looper]CMD_S2C_WILL_STAKE\n");
+					break;
+					
+				case CMD_STAKE:
+					printf("[receiver_looper]CMD_STAKE\n");
 #ifdef USE_IN_ANDROID
-				willStakeCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					stakeCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-				
-			case CMD_STAKE:
-				printf("[receiver_looper]CMD_STAKE\n");
+					break;
+				case CMD_S2C_STAKE_VALUE:
+					printf("[receiver_looper]CMD_S2C_STAKE_VALUE\n");
 #ifdef USE_IN_ANDROID
-				stakeCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					otherUserStakeValueCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-			case CMD_S2C_STAKE_VALUE:
-				printf("[receiver_looper]CMD_S2C_STAKE_VALUE\n");
+					break;
+				case CMD_S2C_WILL_START:
+					printf("[receiver_looper]CMD_S2C_WILL_START\n");
 #ifdef USE_IN_ANDROID
-				otherUserStakeValueCb(data[OFT_DAT], strlen(data[OFT_DAT]));
-#endif
-				break;
-			case CMD_S2C_WILL_START:
-				printf("[receiver_looper]CMD_S2C_WILL_START\n");
-#ifdef USE_IN_ANDROID
-				willStartCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					willStartCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #else
-				format_game_info(data[OFT_DAT]);
+					format_game_info(data[OFT_DAT]);
 #endif
-				break;
+					break;
 
-			case CMD_PLAY:
-				printf("[receiver_looper]CMD_PLAY\n");
+				case CMD_PLAY:
+					printf("[receiver_looper]CMD_PLAY\n");
 #ifdef USE_IN_ANDROID
-				playCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					playCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-			case CMD_S2C_CARD_PATTERN:
-				printf("[receiver_looper]CMD_S2C_CARD_PATTERN\n");
+					break;
+				case CMD_S2C_CARD_PATTERN:
+					printf("[receiver_looper]CMD_S2C_CARD_PATTERN\n");
 #ifdef USE_IN_ANDROID
-				otherUserCardPatternCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					otherUserCardPatternCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-			case CMD_S2C_GAME_RESULT:
-				printf("[receiver_looper]CMD_S2C_GAME_RESULT\n");
+					break;
+				case CMD_S2C_GAME_RESULT:
+					printf("[receiver_looper]CMD_S2C_GAME_RESULT\n");
 #ifdef USE_IN_ANDROID
-				gameResultCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					gameResultCb(data[OFT_DAT], strlen(data[OFT_DAT]));
 #endif
-				break;
-				
-			case CMD_CHAT:		// print chat content
-			    printf("[receiver_looper]CMD_CHAT\n");
-				break;
-			default:
-				break;
-			}
-			//printf("%s# ", name);
+					break;
+					
+				case CMD_CHAT:		// print chat content
+				    printf("[receiver_looper]CMD_CHAT\n");
+					break;
+				default:
+					break;
+				}
+			} while (pos != NULL && pLeft != NULL);
         }
     }
 }

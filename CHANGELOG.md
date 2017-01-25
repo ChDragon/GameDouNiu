@@ -1,5 +1,8 @@
 # GameDouNiu - Changelog
 
+## Version 1.3 - 2016/10/01
+- 服务器端更新V1.3：增加\n解决TCP粘包问题。
+
 ## Version 1.2.5 - 2016/09/23
 - 支持庄家图标、准备图标、赌注图标等。
 - 实现自定义CardsView及GameView。

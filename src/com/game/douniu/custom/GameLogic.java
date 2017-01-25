@@ -77,8 +77,10 @@ public class GameLogic {
 		String usersInfo[] = str.split("#");
 		int num = 0;
 		for (int i=0;i<usersInfo.length;) {
+			Log.v(TAG, "[initialize]usersInfo[0]:"+usersInfo[i]+",usersInfo[1]:"+usersInfo[1]+",usersInfo[2]:"+usersInfo[2]);
 			int userid = Integer.parseInt(usersInfo[i]);
 			long money = Long.parseLong(usersInfo[i+2]);
+			//long money = Integer.parseInt(usersInfo[i+2]);
 			Player player = new Player(context, userid, usersInfo[i+1], money);
 			Log.v(TAG, "[initialize]i:"+i+",player:"+player);
 			if (userid == useridSelf) {
