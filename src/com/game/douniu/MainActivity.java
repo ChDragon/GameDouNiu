@@ -11,6 +11,7 @@ import com.game.douniu.custom.IDouNiuListener;
 import com.game.douniu.custom.IDouniuCallback;
 import com.game.douniu.custom.Player;
 import com.game.douniu.jni.DouniuClientInterface;
+import com.game.douniu.utils.AudioPlayUtils;
 import com.game.douniu.utils.BtBackGround;
 
 import android.app.Activity;
@@ -36,7 +37,7 @@ import android.widget.TextView;
  * @author justin.wu
  *
  */
-public class MainActivity extends Activity implements OnClickListener, IDouNiuListener, IDouniuCallback {
+public class MainActivity extends Activity implements OnClickListener {
 	private static String TAG = "[wzj]MainActivity";
 	
 	public	static MainActivity	instance;
@@ -48,7 +49,16 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 	private int userid;
 	private int bankerIndex;
 	
-	private GameView gameView;
+	private String ipaddr;
+	private String username;
+	private String password;
+	private String loginRet;
+	
+	private Button level1Btn;
+	private Button level2Btn;
+	private Button level3Btn;
+	
+	private ImageView settingsIv;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,60 +66,64 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		setContentView(R.layout.activity_main);
 		
-		Resources res = getResources();
-		if (CardRes.getInstance() != null) {
-			CardRes.getInstance().onLoadImage(res);
-		}
 		Log.v(TAG, "onCreate");
 		instance = this;
-		Intent intent = getIntent();
-		String ipaddr = intent.getStringExtra("ipaddr");
-		String username = intent.getStringExtra("username");
-		String password = intent.getStringExtra("password");
-		String loginRet = intent.getStringExtra("loginRet");
-		Log.v(TAG, "ipaddr:"+ipaddr+",username:"+username+",password:"+password+",loginRet:"+loginRet);
-		String splitdata[] = loginRet.split(":");
-		if (splitdata.length < 2) {
-			Log.v(TAG, "loginRet is not valid as content not enough");
-		} else {
-			userid = Integer.parseInt(splitdata[0]);
-			m_gameLogic = new GameLogic(this, this);
-			m_gameLogic.initialize(splitdata[1], userid);
-		}
 		
-		gameView = new GameView(this);
-		setContentView(gameView);
-		//setContentView(R.layout.activity_main);
+		Intent intent = getIntent();
+		ipaddr = intent.getStringExtra("ipaddr");
+		username = intent.getStringExtra("username");
+		password = intent.getStringExtra("password");
+		loginRet = intent.getStringExtra("loginRet");
+		
+		level1Btn = (Button)findViewById(R.id.level1_image);
+		level1Btn.setOnClickListener(this);
+		level2Btn = (Button)findViewById(R.id.level2_image);
+		level2Btn.setOnClickListener(this);
+		level3Btn = (Button)findViewById(R.id.level3_image);
+		level3Btn.setOnClickListener(this);
+		settingsIv = (ImageView)findViewById(R.id.setting_image);
+		settingsIv.setOnClickListener(this);
 
 		m_douniuClient = new DouniuClientInterface();
-		m_douniuClient.setDouniuCallback(this);
 	}
 
 	@Override
 	protected void onResume() {
 		Log.d(TAG, "[onResume]");
 		super.onResume();
-		Resources res = getResources();
-		if (CardRes.getInstance() != null) {
-			CardRes.getInstance().onLoadImage(res);
-		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		Log.d(TAG, "[onDestroy]");
 		instance = null;
-		if (CardRes.getInstance() != null) {
-			CardRes.getInstance().onDestroy();
-		}
 		super.onDestroy();
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-
+		case R.id.level1_image:
+			Log.v(TAG, "level1_image");
+			Intent intent2 = new Intent(MainActivity.this, OnlinePlayActivity.class);
+			intent2.putExtra("ipaddr", ipaddr);
+			intent2.putExtra("username", username);
+			intent2.putExtra("password", password);
+			intent2.putExtra("loginRet", loginRet);
+			Log.v(TAG, "->startActivity OnlinePlayActivity");
+			startActivity(intent2);
+			break;
+		case R.id.level2_image:
+			Log.v(TAG, "level2_image");
+			break;
+		case R.id.level3_image:
+			Log.v(TAG, "level3_image");
+			break;
+		case R.id.setting_image:
+			Log.v(TAG, "setting_image");
+			break;
 		default:
 			break;
 		}
@@ -119,270 +133,4 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 		return instance;
 	}
 
-	
-	/**
-	 * 来自GameView的onClick事件
-	 */
-	@Override
-	public boolean OnEventInitializeEnd() {
-		Log.v(TAG, "[OnEventInitializeEnd]start");
-		m_players = m_gameLogic.getPlayers();
-		return true;
-	}
-	
-	@Override
-	public boolean OnEventTryingBankerEnd() {
-		Log.v(TAG, "[OnEventTryingBankerEnd]start");
-		return true;
-	}
-
-	@Override
-	public boolean OnEventFaPaiEnd() {
-		Log.v(TAG, "[OnEventFaPaiEnd]start");
-		return true;
-	}
-
-	@Override
-	public boolean OnEventCalculatedEnd() {
-		Log.v(TAG, "[OnEventCalculatedEnd]start");
-		return true;
-	}
-
-	
-	@Override
-	public boolean OnEventcheckoutEnd() {
-		Log.v(TAG, "[OnEventcheckoutEnd]start");
-		return true;
-	}
-	/**
-	 * 
-	 */
-	
-	
-	/**
-	 * 来自GameView的onClick事件
-	 */
-	public void prepareAction() {
-		Log.v(TAG, "[prepareAction]start");
-		m_douniuClient.prepareCMD();
-	}
-	
-	public void tryingBankerAction(boolean isTrying) {
-		Log.v(TAG, "[tryingBankerAction]isTrying:"+isTrying);
-		int value = (isTrying == true)?1:0;
-		m_douniuClient.tryingBankerCMD(value);
-	}
-	
-	public void stakeAction(int stake) {
-		Log.v(TAG, "[stakeAction]stake:"+stake);
-		m_douniuClient.stakeCMD(stake);
-	}
-	
-	public void startAction(boolean hasNiu) {
-		Log.v(TAG, "[playAction]hasNiu:"+hasNiu);
-		int value = (hasNiu == true)?1:0;
-		m_douniuClient.playCMD(value);
-	}
-	/**
-	 * 
-	 */
-	
-	
-	/**
-	 * JNI回调函数
-	 */
-	@Override
-	public void loginCb(int userid, String str) {
-		Log.v(TAG, "[loginCb]start");
-		//TODO
-	}
-
-	@Override
-	public void otherLoginCb(String str) {
-		Log.v(TAG, "[otherLoginCb]str:"+str);
-		m_gameLogic.addPlayer(str);
-		Log.v(TAG, "[otherLoginCb]size:"+m_players.size());
-		gameView.otherLoginCb(str);
-	}
-
-	@Override
-	public void logoutCb(int value) {
-		Log.v(TAG, "[logoutCb]start");
-		//TODO
-	}
-
-	@Override
-	public void otherLogoutCb(int value) {
-		Log.v(TAG, "[otherLogoutCb]start");
-		//TODO
-	}
-
-	@Override
-	public void prepareCb(String str) {
-		Log.v(TAG, "[prepareCb]str:"+str);
-		if (m_players.size() >= 1) {
-			m_players.get(0).setReady(true);
-		}
-		gameView.prepareCb(str);
-	}
-
-	@Override
-	public void otherUserPrepareCb(String str) {
-		Log.v(TAG, "[otherUserPrepareCb]str:"+str);
-		int userid = Integer.parseInt(str);
-		for (int i=0;i<m_players.size();i++) {
-			if (m_players.get(i).getUserid() == userid) {
-				m_players.get(i).setReady(true);
-				break;
-			}
-		}
-		gameView.otherUserPrepareCb(str);
-	}
-
-	@Override
-	public void willBankerCb(String str) {
-		Log.v(TAG, "[willBankerCb]str:"+str);
-		gameView.willBankerCb(str);
-	}
-
-	@Override
-	public void tryBankerCb(String str) {
-		Log.v(TAG, "[tryBankerCb]start");
-		gameView.tryBankerCb(str);
-	}
-
-	
-	/* 返回庄家的userid，并通知所有用户开始下注
-	 * @see com.game.douniu.custom.IDouniuCallback#willStakeCb(java.lang.String)
-	 */
-	@Override
-	public void willStakeCb(String str) {
-		Log.v(TAG, "[willStakeCb]str:"+str);
-		int userid = Integer.parseInt(str);
-		for (int i=0;i<m_players.size();i++) {
-			if (m_players.get(i).getUserid() == userid) {
-				m_players.get(i).setBanker(true);
-				bankerIndex = i;
-				gameView.willStakeCb(str, bankerIndex);
-				break;
-			}
-		}
-	}
-
-	/* 服务器反馈赌注
-	 * str如5，赌注为5X
-	 */
-	@Override
-	public void stakeCb(String str) {
-		Log.v(TAG, "[stakeCb]start");
-		int stake = Integer.parseInt(str);
-		if (m_players.size() >= 1) {
-			m_players.get(0).setIsStake(true);
-			m_players.get(0).setStake(stake);
-		}
-		gameView.stakeCb(str);
-	}
-
-	/* 服务器反馈某用户的赌注
-	 * str如0#5，userid为0的赌注为5X
-	 */
-	@Override
-	public void otherUserStakeValueCb(String str) {
-		Log.v(TAG, "[otherUserStakeValueCb]start");
-		String stakeInfo[] = str.split("#");
-		if (stakeInfo.length >= 2) {
-			int userid = Integer.parseInt(stakeInfo[0]);
-			int stake = Integer.parseInt(stakeInfo[1]);
-			for (int i=0;i<m_players.size();i++) {
-				if (m_players.get(i).getUserid() == userid) {
-					m_players.get(i).setIsStake(true);
-					m_players.get(i).setStake(stake);
-					break;
-				}
-			}
-		}
-		gameView.otherUserStakeValueCb(str);
-	}
-	
-	/* 服务器反馈牌面
-	 * str如0#wu#17#27#37#40#31，牌面为17#27#37#40#31
-	 */
-	@Override
-	public void willStartCb(String str) {
-		Log.v(TAG, "[willStartCb]str:"+str);
-		String cardsInfo[] = str.split("#");
-		if (cardsInfo.length >= 7) {
-			Log.v(TAG, "[willStartCb]--->pushCardsForPlayer ["+Integer.parseInt(cardsInfo[2])+","+Integer.parseInt(cardsInfo[3])+","+
-					Integer.parseInt(cardsInfo[4])+","+Integer.parseInt(cardsInfo[5])+","+ Integer.parseInt(cardsInfo[6])+"]");
-			m_gameLogic.pushCardsForPlayer(0, Integer.parseInt(cardsInfo[2]), Integer.parseInt(cardsInfo[3]), 
-					Integer.parseInt(cardsInfo[4]), Integer.parseInt(cardsInfo[5]), Integer.parseInt(cardsInfo[6]));
-			gameView.willStartCb(str);
-		} else {
-			Log.v(TAG, "[willStartCb]cardsInfo is not valid");
-		}
-	}
-
-	/* 服务器反馈牌型结果pokerPattern
-	 * str如3
-	 */
-	@Override
-	public void playCb(String str) {
-		Log.v(TAG, "[playCb]str:"+str);
-		int value = Integer.parseInt(str);
-		if (m_players.size() >= 1) {
-			m_players.get(0).setPokerPattern(value);
-		}
-		gameView.playCb(str);
-	}
-
-	/* 服务器反馈某用户其牌型结果，及牌面
-	 * str如1#3#18#19#15#13#26，userid为1的牌型为3，牌面为18#19#15#13#26
-	 */
-	@Override
-	public void otherUserCardPatternCb(String str) {
-		Log.v(TAG, "[otherUserCardPatternCb]str:"+str);
-		String cardsInfo[] = str.split("#");
-		if (cardsInfo.length >= 7) {
-			int userid = Integer.parseInt(cardsInfo[0]);
-			int value = Integer.parseInt(cardsInfo[1]);
-			for (int i=0;i<m_players.size();i++) {
-				if (m_players.get(i).getUserid() == userid) {
-					m_players.get(i).setPokerPattern(value);
-					Log.v(TAG, "[otherUserCardPatternCb]->pushCardsForPlayer "+i);
-					m_gameLogic.pushCardsForPlayer(i, Integer.parseInt(cardsInfo[2]), Integer.parseInt(cardsInfo[3]), 
-							Integer.parseInt(cardsInfo[4]), Integer.parseInt(cardsInfo[5]), Integer.parseInt(cardsInfo[6]));
-					gameView.otherUserCardPatternCb(userid);
-					break;
-				}
-			}
-		} else {
-			Log.v(TAG, "[otherUserCardPatternCb]cardsInfo is not valid");
-		}
-	}
-
-	/* 服务器反馈结果
-	 * str如0#10#10010#1#-10#9990#2#0#10000
-	 */
-	@Override
-	public void gameResultCb(String str) {
-		Log.v(TAG, "[gameResultCb]str:"+str);
-		/*String resultsInfo[] = str.split("#");
-		for (int i=0;i<resultsInfo.length;) {
-			int userid = Integer.parseInt(resultsInfo[i]);
-			int result = Integer.parseInt(resultsInfo[i+1]);
-			long money = Long.parseLong(resultsInfo[i+2]);
-			for (int j=0;j<m_players.size();j++) {
-				if (m_players.get(i).getUserid() == userid) {
-					m_players.get(i).setMoney(money);
-					break;
-				}
-			}
-			i = i + 3;
-		}*/
-		
-		gameView.gameResultCb(str);
-	}
-	/**
-	 * 
-	 */
 }

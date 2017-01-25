@@ -29,6 +29,12 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
+            android:name=".OnlinePlayActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
+        <activity
             android:name=".OfflinePlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"

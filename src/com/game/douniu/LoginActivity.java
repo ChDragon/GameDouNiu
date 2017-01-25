@@ -3,6 +3,7 @@ package com.game.douniu;
 
 import com.game.douniu.custom.DouNiuRule;
 import com.game.douniu.jni.DouniuClientInterface;
+import com.game.douniu.utils.AudioPlayUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -35,6 +36,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private String username;
 	
 	private DouniuClientInterface m_douniuClient;
+	private static AudioPlayUtils audioPlayUtils;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		//Log.d(TAG, "[onCreate]++++++++resultStr:"+resultStr);
 		
 		m_douniuClient = new DouniuClientInterface();
+		audioPlayUtils = AudioPlayUtils.getInstance(this);
 	}
 
 	@Override
@@ -65,6 +68,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.account_login_btn:
 			Log.v(TAG, "account_login_btn");
+			AudioPlayUtils.getInstance(this).play(R.raw.click);
 			String loginRet = m_douniuClient.connectAndLogin(ipaddr, username, password);
 			Log.v(TAG, "connectAndLogin loginRet:"+loginRet);
 			if (loginRet.isEmpty() || loginRet.length() == 0) {
@@ -73,16 +77,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 				return;
 			}
 			Log.v(TAG, "connectAndLogin end");
-			intent = new Intent(LoginActivity.this, MainActivity.class);
+			intent = new Intent(LoginActivity.this, MainActivity.class);//intent = new Intent(LoginActivity.this, OnlinePlayActivity.class);
 			intent.putExtra("ipaddr", ipaddr);
 			intent.putExtra("username", username);
 			intent.putExtra("password", password);
 			intent.putExtra("loginRet", loginRet);
-			Log.v(TAG, "->startActivity LoginActivity");
+			Log.v(TAG, "->startActivity MainActivity");
 			startActivity(intent);
 			break;
 		case R.id.visitor_login_btn:
 			Log.v(TAG, "visitor_login_btn");
+			AudioPlayUtils.getInstance(this).play(R.raw.click);
 			intent = new Intent(LoginActivity.this, OfflinePlayActivity.class);
 			startActivity(intent);
 			break;
@@ -98,4 +103,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onDestroy();
 	}
 
+	
+	
 }
