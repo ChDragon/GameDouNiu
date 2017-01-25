@@ -26,6 +26,11 @@
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".OfflinePlayActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+        </activity>
     </application>
     
     <!-- 增加jni socket支持-->  

@@ -5,8 +5,9 @@ import java.util.List;
 
 import com.game.douniu.custom.GameLogic;
 import com.game.douniu.custom.IDouNiuListener;
+import com.game.douniu.custom.IDouniuCallback;
 import com.game.douniu.custom.Player;
-import com.game.douniu.jni.DouniuClient;
+import com.game.douniu.jni.DouniuClientInterface;
 import com.game.douniu.utils.BtBackGround;
 
 import android.app.Activity;
@@ -27,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class LoginActivity extends Activity implements OnClickListener {
+public class LoginActivity extends Activity implements OnClickListener, IDouniuCallback {
 	private static String TAG = "[wzj]LoginActivity";
 	
 	private EditText usernameEt;
@@ -36,7 +37,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private Button accountLoginBtn;
 	private Button visitorLoginBtn;
 	
-	private DouniuClient m_douniuClient;
+	private DouniuClientInterface m_douniuClient;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		visitorLoginBtn = (Button)findViewById(R.id.visitor_login_btn);
 		visitorLoginBtn.setOnClickListener(this);
 		
-		m_douniuClient = new DouniuClient();
+		m_douniuClient = new DouniuClientInterface(this);
 	}
 
 	@Override
@@ -64,12 +65,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.account_login_btn:
 			Log.v(TAG, "account_login_btn");
+			m_douniuClient.getString();
 			int ret = m_douniuClient.connectAndLogin(ipaddr, username, password);
 			if (ret == 0) {
 				Log.w(TAG, "connectAndLogin ERR.");
 				Toast.makeText(this, "connectAndLogin ERR", Toast.LENGTH_SHORT).show();
 				return;
-			}
+			}/**/
 			intent = new Intent(LoginActivity.this, MainActivity.class);
 			intent.putExtra("ipaddr", ipaddr);
 			intent.putExtra("username", username);
@@ -77,20 +79,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 			startActivity(intent);
 			break;
 		case R.id.visitor_login_btn:
-			Log.v(TAG, "account_login_btn");
-			int ret2 = m_douniuClient.connectAndLogin(ipaddr, username, password);
-			if (ret2 == 0) {
-				Log.w(TAG, "connectAndLogin ERR.");
-				Toast.makeText(this, "connectAndLogin ERR", Toast.LENGTH_SHORT).show();
-				return;
-			}
-			intent = new Intent(LoginActivity.this, MainActivity.class);
-			intent.putExtra("ipaddr", ipAddrEt.getText().toString());
+			Log.v(TAG, "visitor_login_btn");
+			intent = new Intent(LoginActivity.this, OfflinePlayActivity.class);
 			startActivity(intent);
 			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void loginCb(byte[] data, int datalen) {
+		Log.d(TAG, "[loginCb]start");
+
+	}
+	
+	@Override
+	public void logoutCb(int value) {
+		Log.d(TAG, "[logoutCb]start");
+
 	}
 	
 }

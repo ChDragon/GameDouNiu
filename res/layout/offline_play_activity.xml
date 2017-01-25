@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     tools:context="${relativePackage}.${activityClass}" >
 
+    <!-- TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" /> -->
         
     <ImageView
         android:id="@+id/player1_image"
@@ -191,97 +195,14 @@
             android:text="5" >
         </TextView>
     </LinearLayout>
-    
-    <FrameLayout
-        android:id="@+id/frame"
-        android:layout_width="fill_parent"
+
+    <Button
+        android:id="@+id/start_image"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
-
-        <Button
-            android:id="@+id/prepare_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:text="准备" />
-        <LinearLayout
-            android:id="@+id/try_banker_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/skip_banker_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:text="不抢" />
-            <Button
-                android:id="@+id/try_banker_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="抢庄" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/stake_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal" >
-            <Button
-                android:id="@+id/x1_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
-                android:text="x1" />
-            <Button
-                android:id="@+id/x5_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="x5" />
-           <Button
-                android:id="@+id/x10_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="x10" />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/start_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:orientation="vertical" >
-            <Button
-                android:id="@+id/you_niu_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="10dp"
-                android:text="有牛" />
-            <Button
-                android:id="@+id/wu_niu_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="10dp"
-                android:text="无牛" />
-        </LinearLayout>
-    </FrameLayout>
-
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/game_bt_start" />
 </RelativeLayout>

@@ -129,7 +129,7 @@ public class GameLogic {
 		Log.v(TAG, "[caculateResult]caculateResult");
 		for (int i=0;i<COUNT_PLAYERS;i++) {
 			for(int j=0;j<COUNT_CARD_EACH_PLAYER;j++){
-				players.get(i).caculateResult();
+				players.get(i).calculateResult();
 			}
 		}
 		douNiuListener.OnEventCalculatedEnd();

@@ -23,16 +23,10 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class MainActivity extends Activity implements OnClickListener, IDouNiuListener {
-	private static String TAG = "[wzj]MainActivity";
-	
-	private final static int STATUS_CONTROL_PREPARE = 1;
-	private final static int STATUS_CONTROL_TRYING_BANKER = 2;
-	private final static int STATUS_CONTROL_STAKE = 3;
-	private final static int STATUS_CONTROL_START = 4;
+public class OfflinePlayActivity extends Activity implements OnClickListener, IDouNiuListener {
+	private static String TAG = "[wzj]OfflinePlayActivity";
 	
 	private Button m_btStart;
 	private GameLogic m_gameLogic;
@@ -62,29 +56,15 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 	private ImageView m_ivPlayer2Image;
 	private ImageView m_ivPlayer3Image;
 	
-	private Button m_prepareBtn;
-	private LinearLayout tryBankerLayout;
-	private LinearLayout stakeLayout;
-	private LinearLayout startLayout;
-	private Button skipBankerBtn;
-	private Button tryBankerBtn;
-	private Button x1Btn;
-	private Button x5Btn;
-	private Button x10Btn;
-	private Button youniuBtn;
-	private Button wuniuBtn;
-	
-	private DouniuClientInterface m_douniuClient;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.offline_play_activity);
 		
-		//m_btStart = (Button)findViewById(R.id.start_image);
-		//m_btStart.setOnClickListener(this);
-		//m_btStart.setOnTouchListener(new BtBackGround());
+		m_btStart = (Button)findViewById(R.id.start_image);
+		m_btStart.setOnClickListener(this);
+		m_btStart.setOnTouchListener(new BtBackGround());
 		
 		m_tvPlayer1Card1 = (TextView)findViewById(R.id.player1_card1);
 		m_tvPlayer1Card2 = (TextView)findViewById(R.id.player1_card2);
@@ -113,75 +93,17 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 		m_ivPlayer2Image.setOnClickListener(this);
 		m_ivPlayer3Image.setOnClickListener(this);
 		
-		m_prepareBtn = (Button)findViewById(R.id.prepare_image);
-		m_prepareBtn.setOnClickListener(this);
-		tryBankerLayout = (LinearLayout)findViewById(R.id.try_banker_layout);
-		stakeLayout = (LinearLayout)findViewById(R.id.stake_layout);
-		startLayout = (LinearLayout)findViewById(R.id.start_layout);
-		skipBankerBtn = (Button)findViewById(R.id.skip_banker_image);
-		skipBankerBtn.setOnClickListener(this);
-		tryBankerBtn = (Button)findViewById(R.id.try_banker_image);
-		tryBankerBtn.setOnClickListener(this);
-		x1Btn = (Button)findViewById(R.id.x1_image);
-		x1Btn.setOnClickListener(this);
-		x5Btn = (Button)findViewById(R.id.x5_image);
-		x5Btn.setOnClickListener(this);
-		x10Btn = (Button)findViewById(R.id.x10_image);
-		x10Btn.setOnClickListener(this);
-		youniuBtn = (Button)findViewById(R.id.you_niu_image);
-		youniuBtn.setOnClickListener(this);
-		wuniuBtn = (Button)findViewById(R.id.wu_niu_image);
-		wuniuBtn.setOnClickListener(this);
-		
 		m_gameLogic = new GameLogic(this, this);
 		m_gameLogic.initialize(3);
-		
-		showControlUI(STATUS_CONTROL_PREPARE);
-		
-		/*Intent intent = getIntent();
-		String ipaddr = intent.getStringExtra("ipaddr");
-		String username = intent.getStringExtra("username");
-		String password = intent.getStringExtra("password");
-		
-		if (ipaddr == null) {
-			ipaddr = "";
-		}
-		if (username == null) {
-			username = "";
-		}
-		if (password == null) {
-			password = "";
-		}
-		
-		m_douniuClient = new DouniuClient();
-		m_douniuClient.connectAndLogin(ipaddr, username, password);*/
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		//case R.id.start_image:
-		//	Log.v(TAG, "start_image");
-		//	onGameStart();
-		//	break;
-		case R.id.prepare_image:
-			
+		case R.id.start_image:
+			Log.v(TAG, "start_image");
+			onGameStart();
 			break;
-		case R.id.skip_banker_image:
-			break;
-		case R.id.try_banker_image:
-			break;
-		case R.id.x1_image:
-			break;
-		case R.id.x5_image:
-			break;
-		case R.id.x10_image:
-			break;
-		case R.id.you_niu_image:
-			break;
-		case R.id.wu_niu_image:
-			break;
-
 		case R.id.player1_image:
 			showPlayerInfo(m_players.get(0));
 			break;
@@ -196,14 +118,14 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 		}
 	}
 	
-	/*private void onGameStart() {
+	private void onGameStart() {
 		Log.v(TAG, "[onGameStart]start");
 		//m_ivStart.setVisibility(View.INVISIBLE);
 		initPlayersView();
 		m_gameLogic.resetGame();
 		updatePlayersView();
 		m_gameLogic.caculateResult();
-	}*/
+	}
 	
 	private void initPlayersView() {
 		m_tvPlayer1Result.setVisibility(View.INVISIBLE);
@@ -251,34 +173,6 @@ public class MainActivity extends Activity implements OnClickListener, IDouNiuLi
 		dialog.show();
 	}
 	
-	private void showControlUI(int status) {
-		switch (status) {
-		case STATUS_CONTROL_PREPARE:
-			m_prepareBtn.setVisibility(View.VISIBLE);
-			tryBankerLayout.setVisibility(View.INVISIBLE);
-			stakeLayout.setVisibility(View.INVISIBLE);
-			startLayout.setVisibility(View.INVISIBLE);
-			break;
-		case STATUS_CONTROL_TRYING_BANKER:
-			m_prepareBtn.setVisibility(View.INVISIBLE);
-			tryBankerLayout.setVisibility(View.VISIBLE);
-			stakeLayout.setVisibility(View.INVISIBLE);
-			startLayout.setVisibility(View.INVISIBLE);
-			break;
-		case STATUS_CONTROL_STAKE:
-			m_prepareBtn.setVisibility(View.INVISIBLE);
-			tryBankerLayout.setVisibility(View.INVISIBLE);
-			stakeLayout.setVisibility(View.VISIBLE);
-			startLayout.setVisibility(View.INVISIBLE);
-			break;
-		case STATUS_CONTROL_START:
-			m_prepareBtn.setVisibility(View.INVISIBLE);
-			tryBankerLayout.setVisibility(View.INVISIBLE);
-			stakeLayout.setVisibility(View.INVISIBLE);
-			startLayout.setVisibility(View.VISIBLE);
-			break;
-		}
-	}
 
 	@Override
 	public boolean OnEventInitializeEnd() {

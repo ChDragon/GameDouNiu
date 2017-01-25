@@ -53,7 +53,7 @@ public class DouNiuRule {
 		
 		for (int i=0;i<cards.size();i++) {
 			int cardValue = cards.get(i).getCardValue();
-			if (cardValue != 11 & cardValue != 12 & cardValue != 13) {
+			if (cardValue != 11 && cardValue != 12 && cardValue != 13) {
 				Log.v(TAG, "[checkFiveHua]is not fivehua");
 				return false;
 			}
@@ -136,7 +136,7 @@ public class DouNiuRule {
 	
 	/* 璁＄畻
 	 *   鑻ユ湁鐗涳紝鍒欏厛鍒ゆ柇鏄惁鐗涚墰锛岃嫢鏄墰鐗涘垯杩斿洖10锛屽惁鍒欒繑鍥炴�鍜屾眰浣�0鐨勪釜浣嶆暟銆�	 *   鑻ユ棤鐗涳紝杩斿洖0銆�	 */
-	public static int caculatePoints(List<Card> cards) {
+	public static int calculatePoints(List<Card> cards) {
 		int points = 0;
 		boolean ret = checkHasNiu(cards);
 		if (ret == true) {

@@ -135,7 +135,7 @@ public class Player {
 	}
 	
 	// 
-	public void caculateResult() {
+	public void calculateResult() {
 		maxCardValue = DouNiuRule.getMaxCardValue(cards);
 		if (DouNiuRule.checkZhaDan(cards) == true) {//鐐稿脊
 			pokerPattern = DouNiuRule.POKER_PATTERN_ZHA_DAN;
@@ -147,7 +147,7 @@ public class Player {
 			pokerPattern = DouNiuRule.POKER_PATTERN_FOUR_HUA;
 			resultStr = context.getResources().getString(R.string.str_four_hua);
 		} else {//涓嶆槸鐗规畩鐗屽瀷
-			points = DouNiuRule.caculatePoints(cards);
+			points = DouNiuRule.calculatePoints(cards);
 			resultStr = getResultStr(points);
 			if (points == 10) {
 				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_NIU;//鐗涚墰
