@@ -59,7 +59,7 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	public List<Player> m_players;
 	
 	private DouniuClientInterface m_douniuClient;
-	private int userid;
+	private int deskId;
 	private int bankerIndex;
 	
 	private GameView gameView;
@@ -105,11 +105,12 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 			m_gameLogic = new GameLogic(this, this);
 			m_gameLogic.initialize(splitdata[1], userid);
 		}*/
-		userid = intent.getIntExtra("userid", 0);
+		deskId = intent.getIntExtra("deskId", 0);
 		String joinRoomRet = intent.getStringExtra("joinRoomRet");
-		Log.v(TAG, "userid"+userid+",joinRoomRet:"+joinRoomRet);
+		Log.v(TAG, "deskId"+deskId+",joinRoomRet:"+joinRoomRet);
+		
 		m_gameLogic = new GameLogic(this, this);
-		m_gameLogic.initialize(joinRoomRet, userid);
+		m_gameLogic.initialize(joinRoomRet, deskId);
 		
 		gameView = new GameView(this);
 		setContentView(gameView);
@@ -283,7 +284,7 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	public void otherJoinRoomCb(String str) {
 		Log.v(TAG, "[otherJoinRoomCb]str:"+str);
 		String otherJoinInfo[] = str.split("#");
-		if (otherJoinInfo.length >= 3) {
+		if (otherJoinInfo.length >= 4) {
 			m_gameLogic.addPlayer(str);
 			Log.v(TAG, "[otherJoinRoomCb]size:"+m_players.size());
 			int userid = Integer.parseInt(otherJoinInfo[0]);

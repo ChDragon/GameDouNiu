@@ -80,7 +80,13 @@ public class GameLogic {
 			Log.v(TAG, "[initialize]num:"+num+"  usersInfo[0]:"+usersInfo[i]+",usersInfo[1]:"+usersInfo[i+1]+",usersInfo[2]:"+usersInfo[i+2]);
 			int userid = Integer.parseInt(usersInfo[i]);
 			long money = Long.parseLong(usersInfo[i+2]);
+			int prepare = Integer.parseInt(usersInfo[i+3]);
 			Player player = new Player(context, userid, usersInfo[i+1], money);
+			if (prepare == 1) {
+				player.setReady(true);
+			} else {
+				player.setReady(false);
+			}
 			Log.v(TAG, "[initialize]player:"+player);
 			if (userid == useridSelf) {
 				Log.v(TAG, "[initialize]userid is self");
@@ -91,7 +97,7 @@ public class GameLogic {
 			}
 
 			num++;
-			i = i + 3;
+			i = i + 4;
 		}
 		for (int i=players.size();i<Constant.MAX_USERS_EACH_ROOM;i++) {
 			Player player = new Player(context);
@@ -105,30 +111,38 @@ public class GameLogic {
 	 */
 	public void addPlayer(String str) {
 		Log.v(TAG, "[addPlayer]str:"+str);
-		Log.v(TAG, "[addPlayer]old size:"+players.size());
 		String usersInfo[] = str.split("#");
-		if (usersInfo.length >= 3) {
+		if (usersInfo.length >= 4) {
 			int userid = Integer.parseInt(usersInfo[0]);
 			long money = Long.parseLong(usersInfo[2]);
-			if (userid >= 0 && userid < players.size()) {
-				int pos = -1;
-				for (int i=0;i<players.size();i++) {
-					if (players.get(i).getUserid() >= 0) {
-						pos = i;
-						break;
-					}
+			int prepare = Integer.parseInt(usersInfo[3]);
+			int pos = -1;
+			for (int i=0;i<players.size();i++) {
+				if (players.get(i).getUserid() < 0) {
+					pos = i;
+					break;
 				}
-				Player player = players.get(pos);
-				player.setUserid(userid);
-				player.setUsername(usersInfo[1]);
-				player.setMoney(money);
-				player.reset();
 			}
+			Log.v(TAG, "[addPlayer]pos:"+pos);
+			if (pos < 0 || pos >= players.size()) {
+				Log.v(TAG, "[addPlayer]pos is too big or too small");
+				return;
+			}
+
+			Player player = players.get(pos);
+			player.setUserid(userid);
+			player.setUsername(usersInfo[1]);
+			player.setMoney(money);
+			if (prepare == 1) {
+				player.setReady(true);
+			} else {
+				player.setReady(false);
+			}
+			player.reset();
 			//Player player = new Player(context, userid, usersInfo[1], money);
 			//Log.v(TAG, "[addPlayer]old size:"+players.size());
 			//players.add(player);
 		}
-		Log.v(TAG, "[addPlayer]end size:"+players.size());
 	}
 	
 	public void removePlayer(int index) {

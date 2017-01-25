@@ -15,6 +15,7 @@
 
 
 int userid = 0;
+//int deskId = 0;
 char hostAddr[MAX_IP_ADDR_LEN] = DEFAULT_HOST_ADDR;
 char name[MAX_NAME_LEN] = "";
 int sockfd;
@@ -449,7 +450,12 @@ void * receiver_looper(void * p){
 				case CMD_JOIN_ROOM:
 					printf("[receiver_looper]CMD_JOIN_ROOM\n");
 #ifdef USE_IN_ANDROID
-					joinRoomCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+					{
+						char buff[MAXLINE];
+						sprintf(buff, "%s:%s", data[OFT_FRM], data[OFT_DAT]);
+						printf("[receiver_looper]CMD_JOIN_ROOM buff:\n",buff);
+						joinRoomCb(buff, strlen(buff));
+					}
 #endif
 					break;
 				case CMD_EXIT_ROOM:

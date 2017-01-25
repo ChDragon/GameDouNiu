@@ -112,6 +112,7 @@ public class MainActivity extends Activity implements OnClickListener, ILoginJoi
 		String splitdata[] = loginRet.split(":");
 		if (splitdata.length < 2) {
 			Log.v(TAG, "loginRet is not valid as content not enough");
+			//TODO: loginAct中线处理，判断是否有userid？
 		} else {
 			userid = Integer.parseInt(splitdata[0]);
 			String ret = splitdata[1];
@@ -142,13 +143,6 @@ public class MainActivity extends Activity implements OnClickListener, ILoginJoi
 		case R.id.level1_image:
 			{
 				Log.v(TAG, "level1_image");
-				//Intent intent2 = new Intent(MainActivity.this, OnlinePlayActivity.class);
-				//intent2.putExtra("ipaddr", ipaddr);
-				//intent2.putExtra("username", username);
-				//intent2.putExtra("password", password);
-				//intent2.putExtra("loginRet", loginRet);
-				//Log.v(TAG, "[level1_image]->startActivity OnlinePlayActivity");
-				//startActivity(intent2);
 			}
 			break;
 		case R.id.level2_image:
@@ -234,14 +228,20 @@ public class MainActivity extends Activity implements OnClickListener, ILoginJoi
 			Toast.makeText(this, "Room full", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		Intent intent2 = new Intent(MainActivity.this, OnlinePlayActivity.class);
-		//intent2.putExtra("ipaddr", ipaddr);
-		//intent2.putExtra("username", username);
-		//intent2.putExtra("password", password);
-		intent2.putExtra("joinRoomRet", str);
-		intent2.putExtra("userid", userid);
-		Log.v(TAG, "[joinRoomCb]->startActivity OnlinePlayActivity");
-		startActivity(intent2);
+		
+		String splitdata[] = str.split(":");
+		if (splitdata.length < 2) {
+			Log.v(TAG, "str is not valid as content not enough");
+			return;
+		} else {
+			int deskId = Integer.parseInt(splitdata[0]);
+			String joinRootRet = splitdata[1];
+			Intent intent2 = new Intent(MainActivity.this, OnlinePlayActivity.class);
+			intent2.putExtra("joinRoomRet", str);
+			intent2.putExtra("deskId", deskId);
+			Log.v(TAG, "[joinRoomCb]->startActivity OnlinePlayActivity");
+			startActivity(intent2);
+		}
 	}
 
 	@Override
