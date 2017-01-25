@@ -63,9 +63,9 @@ public class GameView extends ViewGroup implements OnClickListener {
 	public final static int STATUS_CONTROL_STAKE 			= 3;
 	public final static int STATUS_CONTROL_START 			= 4;
 	
-	public final static int MSG_LOGIN_CB 					= 0;
-	public final static int MSG_OTHER_USER_IN_CB 			= 1;
-	public final static int MSG_LOGOUT_CB 					= 2;
+	public final static int MSG_JOINROOM_CB 				= 0;
+	public final static int MSG_EXITROOM_CB 				= 1;
+	public final static int MSG_OTHER_USER_IN_CB 			= 2;
 	public final static int MSG_OTHER_USER_OUT_CB 			= 3;
 	public final static int MSG_PREPARE_CB 					= 4;
 	public final static int MSG_OTHER_USER_PREPARE_CB 		= 5;
@@ -74,8 +74,8 @@ public class GameView extends ViewGroup implements OnClickListener {
 	public final static int MSG_WILL_STAKE_CB 				= 8;
 	public final static int MSG_STAKE_CB 					= 9;
 	public final static int MSG_OTHER_USER_STAKE_CB 		= 10;
-	public final static int MSG_WILL_START_CB 				= 11;
-	public final static int MSG_PLAY_CB 					= 12;
+	public final static int MSG_WILL_SUBMIT_CB 				= 11;
+	public final static int MSG_SUBMIT_CB 					= 12;
 	public final static int MSG_OTHER_USER_CARD_PATTERN_CB 	= 13;
 	public final static int MSG_GAME_RESULT_CB 				= 14;
 
@@ -84,7 +84,6 @@ public class GameView extends ViewGroup implements OnClickListener {
 	
 	/** 游戏引用 **/
 	OnlinePlayActivity onlinePlayActivity;
-	private static int MAX_USERS = 6;
 	
 	View selfLayout;
 	ImageView card1Iv;
@@ -94,13 +93,8 @@ public class GameView extends ViewGroup implements OnClickListener {
 	ImageView card5Iv;
 	
 	// 当前用户处于扑克视图和玩家视图的第一个，即arrayXXX[0]
-	//CardsView cardsViewSelf;
-	//CardsView[] otherCardsView = new CardsView[MAX_USERS - 1];
-	CardsView[] arrayCardsView = new CardsView[MAX_USERS];
-	
-	//View m_HeadViewSelf;
-	//View[] m_HeadViews = new View[MAX_USERS - 1];
-	View[] arrayHeadView = new View[MAX_USERS];
+	CardsView[] arrayCardsView = new CardsView[Constant.MAX_USERS_EACH_ROOM];
+	View[] arrayHeadView = new View[Constant.MAX_USERS_EACH_ROOM];
 	
 	
 	
@@ -126,10 +120,10 @@ public class GameView extends ViewGroup implements OnClickListener {
 	TextView toastTv;
 	
 	
-	Point[]	m_ptUserHead		= new Point[MAX_USERS];// 0: self
-	Point[]	m_ptUserCardView	= new Point[MAX_USERS];// 0: self
-	Point[]	m_ptUserReady		= new Point[MAX_USERS];
-	Point[]	m_ptUserClock		= new Point[MAX_USERS];
+	Point[]	m_ptUserHead		= new Point[Constant.MAX_USERS_EACH_ROOM];// 0: self
+	Point[]	m_ptUserCardView	= new Point[Constant.MAX_USERS_EACH_ROOM];// 0: self
+	Point[]	m_ptUserReady		= new Point[Constant.MAX_USERS_EACH_ROOM];
+	Point[]	m_ptUserClock		= new Point[Constant.MAX_USERS_EACH_ROOM];
 	
 	public final static int FLAG_STATUS_PREPARE 		= 1;
 	public final static int FLAG_STATUS_BANKER_STAKE 	= 2;
@@ -170,7 +164,7 @@ public class GameView extends ViewGroup implements OnClickListener {
 		clockBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.clock);
 		timeNumBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.timenum);
 		
-		for (int i = 0; i < MAX_USERS; i++) {
+		for (int i = 0; i < Constant.MAX_USERS_EACH_ROOM; i++) {
 			m_ptUserHead[i] = new Point();
 			m_ptUserCardView[i] = new Point();
 			m_ptUserReady[i] = new Point();
@@ -370,7 +364,7 @@ public class GameView extends ViewGroup implements OnClickListener {
 		arrayCardsView[0].layout(m_ptUserCardView[0].x, m_ptUserCardView[0].y, m_ptUserCardView[0].x + btw, m_ptUserCardView[0].y + bth);
 
 		
-		for (int i=1;i<MAX_USERS;i++) {
+		for (int i=1;i<Constant.MAX_USERS_EACH_ROOM;i++) {
 			int headBtw = arrayHeadView[i].getMeasuredWidth();
 			int headBth = arrayHeadView[i].getMeasuredHeight();
 			arrayHeadView[i].layout(m_ptUserHead[i].x, m_ptUserHead[i].y, m_ptUserHead[i].x + headBtw, m_ptUserHead[i].y + headBth);
@@ -453,11 +447,11 @@ public class GameView extends ViewGroup implements OnClickListener {
 					break;
 				case IDC_GAME_YOUNIU:
 					Log.v(TAG, "[onClick]IDC_GAME_YOUNIU");
-					OnlinePlayActivity.getInstance().startAction(true);
+					OnlinePlayActivity.getInstance().submitAction(true);
 					break;
 				case IDC_GAME_WUNIU:
 					Log.v(TAG, "[onClick]IDC_GAME_WUNIU");
-					OnlinePlayActivity.getInstance().startAction(false);
+					OnlinePlayActivity.getInstance().submitAction(false);
 					break;
 				case IDC_BANKER_TRY:
 					Log.v(TAG, "[onClick]IDC_BANKER_TRY");
@@ -498,7 +492,7 @@ public class GameView extends ViewGroup implements OnClickListener {
 	
 	/** 准备图标绘制 **/
 	private void onDrawFlag(Canvas canvas) {
-		int size = (OnlinePlayActivity.getInstance().m_players.size() < MAX_USERS) ? OnlinePlayActivity.getInstance().m_players.size() : MAX_USERS;
+		int size = (OnlinePlayActivity.getInstance().m_players.size() < Constant.MAX_USERS_EACH_ROOM) ? OnlinePlayActivity.getInstance().m_players.size() : Constant.MAX_USERS_EACH_ROOM;
 		for (int i=0;i<size;i++) {
 			if (flagStatus == FLAG_STATUS_PREPARE) {
 				final boolean isReady = OnlinePlayActivity.getInstance().m_players.get(i).isReady();
@@ -568,39 +562,78 @@ public class GameView extends ViewGroup implements OnClickListener {
 	}
 
 	public void showOtherUserUI(int userCount) {
-		int size = (OnlinePlayActivity.getInstance().m_players.size() < MAX_USERS) ? OnlinePlayActivity.getInstance().m_players.size() : MAX_USERS;
-		for (int i=1;i<MAX_USERS;i++) {
+		int size = (OnlinePlayActivity.getInstance().m_players.size() < Constant.MAX_USERS_EACH_ROOM) ? OnlinePlayActivity.getInstance().m_players.size() : Constant.MAX_USERS_EACH_ROOM;
+		List<Player> players = OnlinePlayActivity.getInstance().m_players;
+		for (int i=1;i<Constant.MAX_USERS_EACH_ROOM;i++) {
 			if (i<=size-1) {
-				arrayHeadView[i].setVisibility(View.VISIBLE);
-				arrayCardsView[i].setVisibility(View.VISIBLE);
-				TextView usernameTv = (TextView)arrayHeadView[i].findViewById(R.id.game_head_txt_name);
-				usernameTv.setText(OnlinePlayActivity.getInstance().m_players.get(i).getUsername());
-				TextView moneyTv = (TextView)arrayHeadView[i].findViewById(R.id.game_head_txt_point);
-				moneyTv.setText(""+OnlinePlayActivity.getInstance().m_players.get(i).getMoney());
+				if (players.get(i).getUserid() >= 0) {
+					arrayHeadView[i].setVisibility(View.VISIBLE);
+					arrayCardsView[i].setVisibility(View.VISIBLE);
+					TextView usernameTv = (TextView)arrayHeadView[i].findViewById(R.id.game_head_txt_name);
+					usernameTv.setText(OnlinePlayActivity.getInstance().m_players.get(i).getUsername());
+					TextView moneyTv = (TextView)arrayHeadView[i].findViewById(R.id.game_head_txt_point);
+					moneyTv.setText(""+OnlinePlayActivity.getInstance().m_players.get(i).getMoney());
+				} else {
+					arrayHeadView[i].setVisibility(View.INVISIBLE);
+					arrayCardsView[i].setVisibility(View.INVISIBLE);
+				}
 			} else {
-				//arrayHeadView[i].setVisibility(View.INVISIBLE);
-				//arrayCardsView[i].setVisibility(View.INVISIBLE);
+				arrayHeadView[i].setVisibility(View.INVISIBLE);
+				arrayCardsView[i].setVisibility(View.INVISIBLE);
 			}
 		}
 	}
 	
-	public void showNewOtherUserUI(int playerIndex) {
-		Log.w(TAG, "[showNewOtherUserUI]playerIndex:"+playerIndex);
+	public void showOtherUserJoinUI(int userid) {
+		Log.w(TAG, "[showOtherUserJoinUI]userid:"+userid);
 		List<Player> players = OnlinePlayActivity.getInstance().m_players;
-		Log.w(TAG, "[showNewOtherUserUI]size:"+players.size());
+		Log.w(TAG, "[showOtherUserJoinUI]size:"+players.size());
+		
+		int pos = -1;
 		for (int i=1;i<players.size();i++){
-			Log.w(TAG, "[showNewOtherUserUI]i:"+i+" "+players.get(i));
+			Log.w(TAG, "[showOtherUserJoinUI]i:"+i+" "+players.get(i));
+			if (players.get(i).getUserid() == userid){
+				pos = i;
+				break;
+			}
 		}
-		if (playerIndex >= OnlinePlayActivity.getInstance().m_players.size() || playerIndex <= 0) {
-			Log.w(TAG, "[showNewOtherUserUI]playerIndex too big or too small");
+		if (pos < 0) {
+			Log.w(TAG, "[showOtherUserJoinUI]userid too big or too small");
 			return;
 		}
-		arrayHeadView[playerIndex].setVisibility(View.VISIBLE);
-		arrayCardsView[playerIndex].setVisibility(View.VISIBLE);
-		TextView usernameTv = (TextView)arrayHeadView[playerIndex].findViewById(R.id.game_head_txt_name);
-		usernameTv.setText(OnlinePlayActivity.getInstance().m_players.get(playerIndex).getUsername());
-		TextView moneyTv = (TextView)arrayHeadView[playerIndex].findViewById(R.id.game_head_txt_point);
-		moneyTv.setText(""+OnlinePlayActivity.getInstance().m_players.get(playerIndex).getMoney());
+		
+		if (players.get(pos).getUserid() >= 0) {
+			arrayHeadView[pos].setVisibility(View.VISIBLE);
+			arrayCardsView[pos].setVisibility(View.VISIBLE);
+			TextView usernameTv = (TextView)arrayHeadView[pos].findViewById(R.id.game_head_txt_name);
+			usernameTv.setText(OnlinePlayActivity.getInstance().m_players.get(pos).getUsername());
+			TextView moneyTv = (TextView)arrayHeadView[pos].findViewById(R.id.game_head_txt_point);
+			moneyTv.setText(""+OnlinePlayActivity.getInstance().m_players.get(pos).getMoney());
+		}
+	}
+	
+	public void hideOtherUserExitUI(int userid) {
+		Log.w(TAG, "[hideOtherUserExitUI]userid:"+userid);
+		List<Player> players = OnlinePlayActivity.getInstance().m_players;
+		Log.w(TAG, "[hideOtherUserExitUI]size:"+players.size());
+		
+		int pos = -1;
+		for (int i=1;i<players.size();i++){
+			Log.w(TAG, "[hideOtherUserExitUI]i:"+i+" "+players.get(i));
+			if (players.get(i).getUserid() == userid){
+				pos = i;
+				break;
+			}
+		}
+		if (pos < 0) {
+			Log.w(TAG, "[hideOtherUserExitUI]userid too big or too small");
+			return;
+		}
+		
+		if (players.get(pos).getUserid() < 0) {
+			arrayHeadView[pos].setVisibility(View.INVISIBLE);
+			arrayCardsView[pos].setVisibility(View.INVISIBLE);
+		}
 	}
 	
 	public void showControlUI(int status) {
@@ -675,10 +708,21 @@ public class GameView extends ViewGroup implements OnClickListener {
 			String data;
 			switch (msg.what) {
 			case MSG_OTHER_USER_IN_CB:
-				data = (String)msg.obj;
-				Log.d(TAG, "[MSG_OTHER_USER_IN_CB]data:"+data);
-				showNewOtherUserUI(OnlinePlayActivity.getInstance().m_players.size()-1);
-				invalidate();
+				{
+					data = (String)msg.obj;
+					int userid = msg.arg1;
+					Log.d(TAG, "[MSG_OTHER_USER_IN_CB]data:"+data+",userid:"+userid);
+					showOtherUserJoinUI(userid);
+					invalidate();
+				}
+				break;
+			case MSG_OTHER_USER_OUT_CB:
+				{
+					int userid = msg.arg1;
+					Log.d(TAG, "[MSG_OTHER_USER_OUT_CB]userid:"+userid);
+					hideOtherUserExitUI(userid);
+					invalidate();
+				}
 				break;
 			case MSG_PREPARE_CB:
 				{
@@ -735,9 +779,9 @@ public class GameView extends ViewGroup implements OnClickListener {
 				//TODO: 对应的头像部件中显示赌注
 				invalidate();
 				break;
-			case MSG_WILL_START_CB:
+			case MSG_WILL_SUBMIT_CB:
 				{
-					Log.d(TAG, "[MSG_WILL_START_CB]start");
+					Log.d(TAG, "[MSG_WILL_SUBMIT_CB]start");
 					toastTv.setVisibility(View.INVISIBLE);
 					updateSelfCards(false);
 					showControlUI(GameView.STATUS_CONTROL_START);
@@ -753,7 +797,7 @@ public class GameView extends ViewGroup implements OnClickListener {
 					}*/
 				}
 				break;
-			case MSG_PLAY_CB:
+			case MSG_SUBMIT_CB:
 				{
 					//TODO: 自己的牌型上叠加结果，如“牛九”
 					youniuBtn.setVisibility(View.INVISIBLE);
@@ -867,11 +911,20 @@ public class GameView extends ViewGroup implements OnClickListener {
 	/**
 	 * 被JNI回调函数调用
 	 */
-	public void otherLoginCb(String str) {
-		Log.v(TAG, "[otherLoginCb]str:"+str);
+	public void otherJoinRoomCb(String str, int userid) {
+		Log.v(TAG, "[otherJoinRoomCb]str:"+str+",userid:"+userid);
 		Message msg =new Message();
 		msg.what = MSG_OTHER_USER_IN_CB;
         msg.obj = str;
+        msg.arg1 = userid;
+        mHandler.sendMessage(msg);
+	}
+	
+	public void otherExitRoomCb(int userid) {
+		Log.v(TAG, "[otherExitRoomCb]userid:"+userid);
+		Message msg =new Message();
+		msg.what = MSG_OTHER_USER_OUT_CB;
+		msg.arg1 = userid;
         mHandler.sendMessage(msg);
 	}
 	
@@ -933,18 +986,18 @@ public class GameView extends ViewGroup implements OnClickListener {
 	}
 
 	//显示牌面
-	public void willStartCb(String str) {
-		Log.v(TAG, "[willStartCb]str:"+str);
+	public void willSubmitCb(String str) {
+		Log.v(TAG, "[willSubmitCb]str:"+str);
 		Message msg =new Message();
-		msg.what = MSG_WILL_START_CB;
+		msg.what = MSG_WILL_SUBMIT_CB;
         msg.obj = str;
         mHandler.sendMessage(msg);
 	}
 
-	public void playCb(String str) {
-		Log.v(TAG, "[playCb]str:"+str);
+	public void submitCb(String str) {
+		Log.v(TAG, "[submitCb]str:"+str);
 		Message msg =new Message();
-		msg.what = MSG_PLAY_CB;
+		msg.what = MSG_SUBMIT_CB;
         msg.obj = str;
         mHandler.sendMessage(msg);
 	}

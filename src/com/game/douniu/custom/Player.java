@@ -24,9 +24,17 @@ public class Player {
     private boolean isReady;
     private boolean isStake;
  
+	public Player(Context context) {
+		this.context = context;
+		this.userid = -1;
+		this.username = "";
+		this.money = 10000;
+		initialize();
+	}
+    
 	public Player(Context context, String username) {
 		this.context = context;
-		this.userid = 0;
+		this.userid = -1;
 		this.username = username;
 		this.money = 10000;
 		initialize();

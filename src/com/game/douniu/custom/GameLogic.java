@@ -80,7 +80,6 @@ public class GameLogic {
 			Log.v(TAG, "[initialize]num:"+num+"  usersInfo[0]:"+usersInfo[i]+",usersInfo[1]:"+usersInfo[i+1]+",usersInfo[2]:"+usersInfo[i+2]);
 			int userid = Integer.parseInt(usersInfo[i]);
 			long money = Long.parseLong(usersInfo[i+2]);
-			//long money = Integer.parseInt(usersInfo[i+2]);
 			Player player = new Player(context, userid, usersInfo[i+1], money);
 			Log.v(TAG, "[initialize]player:"+player);
 			if (userid == useridSelf) {
@@ -94,6 +93,10 @@ public class GameLogic {
 			num++;
 			i = i + 3;
 		}
+		for (int i=players.size();i<Constant.MAX_USERS_EACH_ROOM;i++) {
+			Player player = new Player(context);
+			players.add(player);
+		}
 		douNiuListener.OnEventInitializeEnd();
 	}
 	
@@ -102,15 +105,55 @@ public class GameLogic {
 	 */
 	public void addPlayer(String str) {
 		Log.v(TAG, "[addPlayer]str:"+str);
+		Log.v(TAG, "[addPlayer]old size:"+players.size());
 		String usersInfo[] = str.split("#");
 		if (usersInfo.length >= 3) {
 			int userid = Integer.parseInt(usersInfo[0]);
 			long money = Long.parseLong(usersInfo[2]);
-			Player player = new Player(context, userid, usersInfo[1], money);
-			Log.v(TAG, "[addPlayer]old size:"+players.size());
-			players.add(player);
+			if (userid >= 0 && userid < players.size()) {
+				int pos = -1;
+				for (int i=0;i<players.size();i++) {
+					if (players.get(i).getUserid() >= 0) {
+						pos = i;
+						break;
+					}
+				}
+				Player player = players.get(pos);
+				player.setUserid(userid);
+				player.setUsername(usersInfo[1]);
+				player.setMoney(money);
+				player.reset();
+			}
+			//Player player = new Player(context, userid, usersInfo[1], money);
+			//Log.v(TAG, "[addPlayer]old size:"+players.size());
+			//players.add(player);
 		}
 		Log.v(TAG, "[addPlayer]end size:"+players.size());
+	}
+	
+	public void removePlayer(int index) {
+		Log.v(TAG, "[removePlayer]index:"+index);
+		Log.v(TAG, "[removePlayer]start size:"+players.size());
+		if (index >= 0 && index < players.size()) {
+			int pos = -1;
+			for (int i=0;i<players.size();i++) {
+				if (players.get(i).getUserid() == index) {
+					pos = i;
+					break;
+				}
+			}
+			if (pos < 0) {
+				Log.v(TAG, "[removePlayer]error: not found this player");
+				return;
+			}
+			Player player = players.get(pos);
+			player.setUserid(-1);
+			player.setUsername("");
+			player.setMoney(10000);
+			player.reset();
+			//players.remove(index);
+		}
+		Log.v(TAG, "[removePlayer]end size:"+players.size());
 	}
 	
 	public void tryingBeBanker() {

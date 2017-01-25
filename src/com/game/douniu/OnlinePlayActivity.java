@@ -91,11 +91,12 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 		Log.v(TAG, "onCreate");
 		instance = this;
 		Intent intent = getIntent();
-		String ipaddr = intent.getStringExtra("ipaddr");
+		/*String ipaddr = intent.getStringExtra("ipaddr");
 		String username = intent.getStringExtra("username");
 		String password = intent.getStringExtra("password");
 		String loginRet = intent.getStringExtra("loginRet");
 		Log.v(TAG, "ipaddr:"+ipaddr+",username:"+username+",password:"+password+",loginRet:"+loginRet);
+		String loginRet = intent.getStringExtra("loginRet");
 		String splitdata[] = loginRet.split(":");
 		if (splitdata.length < 2) {
 			Log.v(TAG, "loginRet is not valid as content not enough");
@@ -103,13 +104,18 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 			userid = Integer.parseInt(splitdata[0]);
 			m_gameLogic = new GameLogic(this, this);
 			m_gameLogic.initialize(splitdata[1], userid);
-		}
+		}*/
+		userid = intent.getIntExtra("userid", 0);
+		String joinRoomRet = intent.getStringExtra("joinRoomRet");
+		Log.v(TAG, "userid"+userid+",joinRoomRet:"+joinRoomRet);
+		m_gameLogic = new GameLogic(this, this);
+		m_gameLogic.initialize(joinRoomRet, userid);
 		
 		gameView = new GameView(this);
 		setContentView(gameView);
 		//setContentView(R.layout.activity_main);
 
-		m_douniuClient = new DouniuClientInterface();
+		m_douniuClient = DouniuClientInterface.getInstance();//new DouniuClientInterface();
 		m_douniuClient.setDouniuCallback(this);
 		
 		m_ClockControl = new UserClock(m_ClockHandler);
@@ -128,6 +134,7 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	@Override
 	protected void onDestroy() {
 		Log.d(TAG, "[onDestroy]");
+		exitRoomAction();
 		instance = null;
 		if (CardRes.getInstance() != null) {
 			CardRes.getInstance().onDestroy();
@@ -183,7 +190,7 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 			case IDI_WILL_SUBMIT:
 				if (chairid == getMeChairID()) {
 					if (time == 0) {
-						startAction(false);
+						submitAction(false);
 					}
 					if (time > 0 && time < 5) {
 						AudioPlayUtils.getInstance(this).play(R.raw.game_warn);
@@ -251,10 +258,15 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 		m_douniuClient.stakeCMD(stake);
 	}
 	
-	public void startAction(boolean hasNiu) {
-		Log.v(TAG, "[playAction]hasNiu:"+hasNiu);
+	public void submitAction(boolean hasNiu) {
+		Log.v(TAG, "[submitAction]hasNiu:"+hasNiu);
 		int value = (hasNiu == true)?1:0;
-		m_douniuClient.playCMD(value);
+		m_douniuClient.submitCMD(value);
+	}
+	
+	public void exitRoomAction() {
+		Log.v(TAG, "[exitRoomAction]start");
+		m_douniuClient.exitRoomCMD();
 	}
 	/**
 	 * 
@@ -264,30 +276,28 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	/**
 	 * JNI回调函数
 	 */
+	/* 服务器反馈有玩家加入房间
+	 * str如1#zhou#10000
+	 */
 	@Override
-	public void loginCb(int userid, String str) {
-		Log.v(TAG, "[loginCb]start");
-		//TODO
+	public void otherJoinRoomCb(String str) {
+		Log.v(TAG, "[otherJoinRoomCb]str:"+str);
+		String otherJoinInfo[] = str.split("#");
+		if (otherJoinInfo.length >= 3) {
+			m_gameLogic.addPlayer(str);
+			Log.v(TAG, "[otherJoinRoomCb]size:"+m_players.size());
+			int userid = Integer.parseInt(otherJoinInfo[0]);
+			gameView.otherJoinRoomCb(str, userid);
+		}
 	}
 
 	@Override
-	public void otherLoginCb(String str) {
-		Log.v(TAG, "[otherLoginCb]str:"+str);
-		m_gameLogic.addPlayer(str);
-		Log.v(TAG, "[otherLoginCb]size:"+m_players.size());
-		gameView.otherLoginCb(str);
-	}
-
-	@Override
-	public void logoutCb(int value) {
-		Log.v(TAG, "[logoutCb]start");
-		//TODO
-	}
-
-	@Override
-	public void otherLogoutCb(int value) {
-		Log.v(TAG, "[otherLogoutCb]start");
-		//TODO
+	public void otherExitRoomCb(String str) {
+		Log.v(TAG, "[otherLogoutCb]str:"+str);
+		int userid = Integer.parseInt(str);
+		m_gameLogic.removePlayer(userid);
+		Log.v(TAG, "[otherJoinRoomCb]size:"+m_players.size());
+		gameView.otherExitRoomCb(userid);
 	}
 
 	@Override
@@ -388,18 +398,18 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	 * str如0#wu#17#27#37#40#31，牌面为17#27#37#40#31
 	 */
 	@Override
-	public void willStartCb(String str) {
-		Log.v(TAG, "[willStartCb]str:"+str);
+	public void willSubmitCb(String str) {
+		Log.v(TAG, "[willSubmitCb]str:"+str);
 		String cardsInfo[] = str.split("#");
 		if (cardsInfo.length >= 7) {
-			Log.v(TAG, "[willStartCb]--->pushCardsForPlayer ["+Integer.parseInt(cardsInfo[2])+","+Integer.parseInt(cardsInfo[3])+","+
+			Log.v(TAG, "[willSubmitCb]--->pushCardsForPlayer ["+Integer.parseInt(cardsInfo[2])+","+Integer.parseInt(cardsInfo[3])+","+
 					Integer.parseInt(cardsInfo[4])+","+Integer.parseInt(cardsInfo[5])+","+ Integer.parseInt(cardsInfo[6])+"]");
 			m_gameLogic.pushCardsForPlayer(0, Integer.parseInt(cardsInfo[2]), Integer.parseInt(cardsInfo[3]), 
 					Integer.parseInt(cardsInfo[4]), Integer.parseInt(cardsInfo[5]), Integer.parseInt(cardsInfo[6]));
 			m_ClockControl.setGameClock(getMeChairID(), IDI_WILL_SUBMIT, TIME_WILL_SUBMIT);
-			gameView.willStartCb(str);
+			gameView.willSubmitCb(str);
 		} else {
-			Log.v(TAG, "[willStartCb]cardsInfo is not valid");
+			Log.v(TAG, "[willSubmitCb]cardsInfo is not valid");
 		}
 	}
 
@@ -407,14 +417,14 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	 * str如3
 	 */
 	@Override
-	public void playCb(String str) {
-		Log.v(TAG, "[playCb]str:"+str);
+	public void submitCb(String str) {
+		Log.v(TAG, "[submitCb]str:"+str);
 		int value = Integer.parseInt(str);
 		if (m_players.size() >= 1) {
 			m_players.get(0).setPokerPattern(value);
 		}
 		m_ClockControl.killGameClock(IDI_WILL_SUBMIT);
-		gameView.playCb(str);
+		gameView.submitCb(str);
 	}
 
 	/* 服务器反馈某用户其牌型结果，及牌面
@@ -467,4 +477,5 @@ public class OnlinePlayActivity extends Activity implements OnClickListener, IDo
 	/**
 	 * 
 	 */
+
 }

@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_below="@id/visitor_login_btn"
-            android:text="192.168.1.105"
+            android:text="192.168.1.119"
             android:hint="127.0.0.1"
             android:imeOptions="actionNext"
             android:inputType="text" />

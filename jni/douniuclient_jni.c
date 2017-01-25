@@ -8,9 +8,13 @@ static jobject g_JniObject              = NULL;
 static const char *classPathName      = "com/game/douniu/jni/DouniuClientInterface";
 
 jmethodID loginCb_Id       			= NULL;
-jmethodID otherLoginCb_Id 			= NULL;
 jmethodID logoutCb_Id        		= NULL;
-jmethodID otherLogoutCb_Id        	= NULL;
+
+jmethodID joinRoomCb_Id 			= NULL;
+jmethodID otherJoinRoomCb_Id 		= NULL;
+jmethodID exitRoomCb_Id       		= NULL;
+jmethodID otherExitRoomCb_Id        = NULL;
+
 jmethodID prepareCb_Id         		= NULL;
 jmethodID otherUserPrepareCb_Id     = NULL;
 jmethodID willBankerCb_Id       	= NULL;
@@ -19,8 +23,8 @@ jmethodID tryBankerCb_Id       		= NULL;
 jmethodID willStakeCb_Id       		= NULL;
 jmethodID stakeCb_Id 				= NULL;
 jmethodID otherUserStakeValueCb_Id  = NULL;
-jmethodID willStartCb_Id         	= NULL;
-jmethodID playCb_Id     			= NULL;
+jmethodID willSubmitCb_Id         	= NULL;
+jmethodID submitCb_Id     			= NULL;
 jmethodID otherUserCardPatternCb_Id = NULL;
 jmethodID gameResultCb_Id       	= NULL;
 
@@ -69,18 +73,6 @@ void loginCb(int userid, char *data, int datalen)
 	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
 }
 
-void otherLoginCb(char *data, int datalen)
-{
-	LOGD("[otherLoginCb]---data[%s], datalen[%d]", data, datalen);
-	ATTACH_CURRENT_THREAD_IF_NEED;
-
-	jstring jstr = (*env)->NewStringUTF(env, data);
-	(*env)->CallVoidMethod(env, g_JniObject, otherLoginCb_Id, jstr);
-
-	DETACH_CURRENT_THREAD_IF_NEED;
-	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
-}
-
 void logoutCb(int value)
 {
 	LOGD("start %s %s %d", __FILE__, __FUNCTION__, __LINE__);
@@ -92,15 +84,52 @@ void logoutCb(int value)
 	(*g_vm)->DetachCurrentThread(g_vm); //释放当前线程的JNIEnv*
 }
 
-void otherLogoutCb(int value)
+void joinRoomCb(char *data, int datalen)
 {
-	LOGD("start %s %s %d", __FILE__, __FUNCTION__, __LINE__);
-	(*g_vm)->AttachCurrentThread(g_vm, &g_env, NULL);
+	LOGD("[joinRoomCb]---data[%s], datalen[%d]", data, datalen);
+	ATTACH_CURRENT_THREAD_IF_NEED;
 
-	(*g_env)->CallVoidMethod(g_env, g_JniObject, otherLogoutCb_Id, value);
+	jstring jstr = (*env)->NewStringUTF(env, data);
+	(*env)->CallVoidMethod(env, g_JniObject, joinRoomCb_Id, jstr);
 
+	DETACH_CURRENT_THREAD_IF_NEED;
 	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
-	(*g_vm)->DetachCurrentThread(g_vm);
+}
+
+void otherJoinRoomCb(char *data, int datalen)
+{
+	LOGD("[otherJoinRoomCb]---data[%s], datalen[%d]", data, datalen);
+	ATTACH_CURRENT_THREAD_IF_NEED;
+
+	jstring jstr = (*env)->NewStringUTF(env, data);
+	(*env)->CallVoidMethod(env, g_JniObject, otherJoinRoomCb_Id, jstr);
+
+	DETACH_CURRENT_THREAD_IF_NEED;
+	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
+}
+
+void exitRoomCb(char *data, int datalen)
+{
+	LOGD("[exitRoomCb]---data[%s], datalen[%d]", data, datalen);
+	ATTACH_CURRENT_THREAD_IF_NEED;
+
+	jstring jstr = (*env)->NewStringUTF(env, data);
+	(*g_env)->CallVoidMethod(env, g_JniObject, exitRoomCb_Id, jstr);
+
+	DETACH_CURRENT_THREAD_IF_NEED;
+	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
+}
+
+void otherExitRoomCb(char *data, int datalen)
+{
+	LOGD("[otherExitRoomCb]---data[%s], datalen[%d]", data, datalen);
+	ATTACH_CURRENT_THREAD_IF_NEED;
+
+	jstring jstr = (*env)->NewStringUTF(env, data);
+	(*g_env)->CallVoidMethod(env, g_JniObject, otherExitRoomCb_Id, jstr);
+
+	DETACH_CURRENT_THREAD_IF_NEED;
+	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
 }
 
 void prepareCb(char *data, int datalen)
@@ -187,25 +216,25 @@ void otherUserStakeValueCb(char *data, int datalen)
 	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
 }
 
-void willStartCb(char *data, int datalen)
+void willSubmitCb(char *data, int datalen)
 {
-	LOGD("[willStartCb]---data[%s], datalen[%d]", data, datalen);
+	LOGD("[willSubmitCb]---data[%s], datalen[%d]", data, datalen);
 	ATTACH_CURRENT_THREAD_IF_NEED;
 
 	jstring jstr = (*env)->NewStringUTF(env, data);
-	(*env)->CallVoidMethod(env, g_JniObject, willStartCb_Id, jstr);
+	(*env)->CallVoidMethod(env, g_JniObject, willSubmitCb_Id, jstr);
 
 	DETACH_CURRENT_THREAD_IF_NEED;
 	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
 }
 
-void playCb(char *data, int datalen)
+void submitCb(char *data, int datalen)
 {
-	LOGD("[playCb]---data[%s], datalen[%d]", data, datalen);
+	LOGD("[submitCb]---data[%s], datalen[%d]", data, datalen);
 	ATTACH_CURRENT_THREAD_IF_NEED;
 
 	jstring jstr = (*env)->NewStringUTF(env, data);
-	(*env)->CallVoidMethod(env, g_JniObject, playCb_Id, jstr);
+	(*env)->CallVoidMethod(env, g_JniObject, submitCb_Id, jstr);
 
 	DETACH_CURRENT_THREAD_IF_NEED;
 	LOGD("end %s %s %d", __FILE__, __FUNCTION__, __LINE__);
@@ -255,14 +284,22 @@ jboolean nativeInit(JNIEnv *env, jobject thiz)
 	loginCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "loginCb", "(ILjava/lang/String;)V");
 	CHECK_METHOD_ID(loginCb_Id);
 
-	otherLoginCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "otherLoginCb", "(Ljava/lang/String;)V");
-	CHECK_METHOD_ID(otherLoginCb_Id);
-
 	logoutCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "logoutCb", "(I)V");
 	CHECK_METHOD_ID(logoutCb_Id);
 
-	otherLogoutCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "otherLogoutCb", "(I)V");
-	CHECK_METHOD_ID(otherLogoutCb_Id);
+
+	joinRoomCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "joinRoomCb", "(Ljava/lang/String;)V");
+	CHECK_METHOD_ID(joinRoomCb_Id);
+
+	otherJoinRoomCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "otherJoinRoomCb", "(Ljava/lang/String;)V");
+	CHECK_METHOD_ID(otherJoinRoomCb_Id);
+
+	exitRoomCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "exitRoomCb", "(Ljava/lang/String;)V");
+	CHECK_METHOD_ID(exitRoomCb_Id);
+
+	otherExitRoomCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "otherExitRoomCb", "(Ljava/lang/String;)V");
+	CHECK_METHOD_ID(otherExitRoomCb_Id);
+
 
 	prepareCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "prepareCb", "(Ljava/lang/String;)V");
 	CHECK_METHOD_ID(prepareCb_Id);
@@ -276,7 +313,6 @@ jboolean nativeInit(JNIEnv *env, jobject thiz)
 	tryBankerCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "tryBankerCb", "(Ljava/lang/String;)V");
 	CHECK_METHOD_ID(tryBankerCb_Id);
 
-
 	willStakeCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "willStakeCb", "(Ljava/lang/String;)V");
 	CHECK_METHOD_ID(willStakeCb_Id);
 
@@ -286,11 +322,11 @@ jboolean nativeInit(JNIEnv *env, jobject thiz)
 	otherUserStakeValueCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "otherUserStakeValueCb", "(Ljava/lang/String;)V");
 	CHECK_METHOD_ID(otherUserStakeValueCb_Id);
 
-	willStartCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "willStartCb", "(Ljava/lang/String;)V");
-	CHECK_METHOD_ID(willStartCb_Id);
+	willSubmitCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "willSubmitCb", "(Ljava/lang/String;)V");
+	CHECK_METHOD_ID(willSubmitCb_Id);
 
-	playCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "playCb", "(Ljava/lang/String;)V");
-	CHECK_METHOD_ID(playCb_Id);
+	submitCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "submitCb", "(Ljava/lang/String;)V");
+	CHECK_METHOD_ID(submitCb_Id);
 
 	otherUserCardPatternCb_Id = (*g_env)->GetMethodID(g_env, g_JniClass, "otherUserCardPatternCb", "(Ljava/lang/String;)V");
 	CHECK_METHOD_ID(otherUserCardPatternCb_Id);
@@ -305,22 +341,24 @@ jboolean nativeStop(JNIEnv *env, jobject thiz)
 {
 	(*g_env)->DeleteGlobalRef(g_env, g_JniObject);
 	g_env = NULL;
-	g_JniClass = NULL;
-	g_JniObject = NULL;
-	loginCb_Id = NULL;
-	otherLoginCb_Id = NULL;
-	logoutCb_Id        		= NULL;
-	otherLogoutCb_Id        = NULL;
-	prepareCb_Id         		= NULL;
-	otherUserPrepareCb_Id     = NULL;
+	g_JniClass				= NULL;
+	g_JniObject 			= NULL;
+	loginCb_Id 				= NULL;
+	logoutCb_Id 			= NULL;
+	joinRoomCb_Id			= NULL;
+	otherJoinRoomCb_Id 		= NULL;
+	exitRoomCb_Id			= NULL;
+	otherExitRoomCb_Id 		= NULL;
+	prepareCb_Id         	= NULL;
+	otherUserPrepareCb_Id  	= NULL;
 	willBankerCb_Id       	= NULL;
-	tryBankerCb_Id       		= NULL;
-	willStakeCb_Id       		= NULL;
+	tryBankerCb_Id       	= NULL;
+	willStakeCb_Id       	= NULL;
 	stakeCb_Id 				= NULL;
-	otherUserStakeValueCb_Id  = NULL;
-	willStartCb_Id         	= NULL;
-	playCb_Id     			= NULL;
-	otherUserCardPatternCb_Id = NULL;
+	otherUserStakeValueCb_Id	= NULL;
+	willSubmitCb_Id         = NULL;
+	submitCb_Id     		= NULL;
+	otherUserCardPatternCb_Id 	= NULL;
 	gameResultCb_Id       	= NULL;
 	return TRUE;
 }
@@ -362,6 +400,18 @@ jint nativeLogoutAndExit(JNIEnv* env, jobject thiz, jstring username)
     return ret;
 }
 
+void nativeJoinRoomCMD(JNIEnv* env, jobject thiz)
+{
+	LOGD("nativeJoinRoomCMD start");
+    joinRoomCMD();
+}
+
+void nativeExitRoomCMD(JNIEnv* env, jobject thiz)
+{
+	LOGD("nativeExitRoomCMD start");
+    exitRoomCMD();
+}
+
 void nativePrepareCMD(JNIEnv* env, jobject thiz)
 {
 	LOGD("nativePrepareCMD start");
@@ -380,10 +430,10 @@ void nativeStakeCMD(JNIEnv* env, jobject thiz, jint stakeValue)
 	stakeCMD(stakeValue);
 }
 
-void nativePlayCMD(JNIEnv* env, jobject thiz, jint niuValue)
+void nativeSubmitCMD(JNIEnv* env, jobject thiz, jint niuValue)
 {
-	LOGD("nativePlayCMD start");
-    playCMD(niuValue);
+	LOGD("nativeSubmitCMD start");
+    submitCMD(niuValue);
 }
 //==================================
 
@@ -397,10 +447,12 @@ static JNINativeMethod gMethods[] = {
     {"nativeStop", "()Z", (void*)nativeStop},
     {"nativeConnectAndLogin", "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;", (void*)nativeConnectAndLogin},
     {"nativeLogoutAndExit", "(Ljava/lang/String;)I", (void*)nativeLogoutAndExit},
+    {"nativeJoinRoomCMD", "()V", (void*)nativeJoinRoomCMD},
+    {"nativeExitRoomCMD", "()V", (void*)nativeExitRoomCMD},
     {"nativePrepareCMD", "()V", (void*)nativePrepareCMD},
     {"nativeTryingBankerCMD", "(I)V", (void*)nativeTryingBankerCMD},
     {"nativeStakeCMD", "(I)V", (void*)nativeStakeCMD},
-    {"nativePlayCMD", "(I)V", (void*)nativePlayCMD},
+    {"nativeSubmitCMD", "(I)V", (void*)nativeSubmitCMD},
 };
 
 

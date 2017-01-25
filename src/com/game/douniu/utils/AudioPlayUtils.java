@@ -3,6 +3,8 @@ package com.game.douniu.utils;
 import java.util.HashMap;
 
 import com.game.douniu.R;
+import com.game.douniu.custom.SharedPrefHelper;
+
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -46,12 +48,15 @@ public class AudioPlayUtils {
 		}
 	}
 	
-	
 	public void play(int sound) {
 		play(sound, 0);
 	}
 
 	public void play(int sound, int loop) {
+		if (!SharedPrefHelper.getInstance(mContext).getBoolean("sound", true)) {
+			Log.d(TAG, "not play as sound effect off");
+			return;
+		}
         float audioMaxVolum = sAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         float audioCurrentVolum = sAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         float audioRatio = 0.05F;//audioCurrentVolum / audioMaxVolum;

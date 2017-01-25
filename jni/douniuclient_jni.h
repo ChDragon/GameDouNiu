@@ -26,22 +26,28 @@ jstring nativeConnectAndLogin(JNIEnv* env,
                             jobject thiz, jstring ipaddr,
                             jstring username, jstring password);
 jint nativeLogoutAndExit(JNIEnv* env, jobject thiz, jstring username);
+void nativeJoinRoomCMD(JNIEnv* env, jobject thiz);
+void nativeExitRoomCMD(JNIEnv* env, jobject thiz);
 void nativePrepareCMD(JNIEnv* env, jobject thiz);
 void nativeTryingBankerCMD(JNIEnv* env, jobject thiz, jint value);
 void nativeStakeCMD(JNIEnv* env, jobject thiz, jint stakeValue);
-void nativePlayCMD(JNIEnv* env, jobject thiz, jint niuValue);
+void nativeSubmitCMD(JNIEnv* env, jobject thiz, jint niuValue);
 
 extern char* connectServerAndLogin(char *ipaddr, char *username, char *password);
 extern int logoutAndExit(char *username);
+extern void joinRoomCMD();
+extern void exitRoomCMD();
 extern void prepareCMD();
 extern void tryingBankerCMD(int value);
 extern void stakeCMD(int stakeValue);
-extern void playCMD(int niuValue);
+extern void submitCMD(int niuValue);
 
 extern void loginCb(int userid, char *data, int datalen);
-extern void otherLoginCb(char *data, int datalen);
 extern void logoutCb(int value);
-extern void otherLogoutCb(int value);
+extern void joinRoomCb(char *data, int datalen);
+extern void otherJoinRoomCb(char *data, int datalen);
+extern void exitRoomCb(char *data, int datalen);
+extern void otherExitRoomCb(char *data, int datalen);
 extern void prepareCb(char *data, int datalen);
 extern void otherUserPrepareCb(char *data, int datalen);
 extern void willBankerCb(char *data, int datalen);
@@ -49,8 +55,8 @@ extern void tryBankerCb(char *data, int datalen);
 extern void willStakeCb(char *data, int datalen);
 extern void stakeCb(char *data, int datalen);
 extern void otherUserStakeValueCb(char *data, int datalen);
-extern void willStartCb(char *data, int datalen);
-extern void playCb(char *data, int datalen);
+extern void willSubmitCb(char *data, int datalen);
+extern void submitCb(char *data, int datalen);
 extern void otherUserCardPatternCb(char *data, int datalen);
 extern void gameResultCb(char *data, int datalen);
 

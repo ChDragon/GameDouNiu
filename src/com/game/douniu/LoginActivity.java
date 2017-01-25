@@ -55,7 +55,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		//String resultStr = DouNiuRule.getResultStr(this, 7);//String resultStr = DouNiuRule.getResultStr(mContext, MainActivity.getInstance().m_players.get(0).getPokerPattern());
 		//Log.d(TAG, "[onCreate]++++++++resultStr:"+resultStr);
 		
-		m_douniuClient = new DouniuClientInterface();
+		m_douniuClient = DouniuClientInterface.getInstance();//new DouniuClientInterface();
 		audioPlayUtils = AudioPlayUtils.getInstance(this);
 	}
 
@@ -74,6 +74,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 			if (loginRet.isEmpty() || loginRet.length() == 0) {
 				Log.w(TAG, "connectAndLogin ERR.");
 				Toast.makeText(this, "connectAndLogin ERR", Toast.LENGTH_SHORT).show();
+				return;
+			} else if (loginRet.equals("NE")) {
+				Log.w(TAG, "connectAndLogin ACCOUNT NOT EXIST.");
+				Toast.makeText(this, "ACCOUNT NOT EXIST", Toast.LENGTH_SHORT).show();
 				return;
 			}
 			Log.v(TAG, "connectAndLogin end");

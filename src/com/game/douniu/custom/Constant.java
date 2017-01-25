@@ -9,6 +9,9 @@ public class Constant {
 	public static final int		INVALID_BYTE				= 255;
 	public static final int		INVALID_ITEM				= 65535;
 	
+	// 游戏室参数
+	public static int MAX_USERS_EACH_ROOM = 6;
+	
 	// 下注的赌注等级值
 	public final static int VALUE_STAKE_LEVEL_1			= 1;
 	public final static int VALUE_STAKE_LEVEL_2			= 5;
