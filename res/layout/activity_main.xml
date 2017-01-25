@@ -12,7 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/head_land" />
+        android:src="@drawable/role_1" />
     <TextView
         android:id="@+id/player1_result"
         android:layout_width="wrap_content"
@@ -66,7 +66,21 @@
             android:text="5" >
         </TextView>
     </LinearLayout>
-
+    <com.game.douniu.custom.GameView
+        android:id="@+id/gameview"
+        android:layout_width="wrap_content"  
+        android:layout_height="100dp"  
+        android:layout_toRightOf="@id/player1_image"
+        android:layout_below="@id/player1_image"
+         />
+    <!-- com.game.douniu.custom.CardsView
+        android:id="@+id/cardsview1"
+        android:layout_width="wrap_content"  
+        android:layout_height="100dp"  
+        android:layout_toRightOf="@id/player1_image"
+        android:layout_below="@id/player1_image"
+         /> -->
+    
     <ImageView
         android:id="@+id/player2_image"
         android:layout_width="wrap_content"
@@ -74,7 +88,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/head_farmer" />
+        android:src="@drawable/role_2" />
     <TextView
         android:id="@+id/player2_result"
         android:layout_width="wrap_content"
@@ -131,29 +145,29 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/player3_image"
+        android:id="@+id/selfplayer_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentBottom="true"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/head_farmer" />
+        android:src="@drawable/role_3" />
     <TextView
-        android:id="@+id/player3_result"
+        android:id="@+id/selfplayer_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/player3_image"
-        android:layout_alignTop="@id/player3_image"
+        android:layout_toRightOf="@id/selfplayer_image"
+        android:layout_alignTop="@id/selfplayer_image"
         android:layout_marginLeft="10dp"
         android:textSize="24sp"
         android:text="牛" >
     </TextView>
-    <LinearLayout
-        android:id="@+id/player3_cardlayout"
+    <!-- LinearLayout
+        android:id="@+id/selfplayer_cardlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_above="@+id/player3_image"
+        android:layout_above="@+id/selfplayer_image"
         android:layout_marginBottom="15dp" >
         <TextView
             android:id="@+id/player3_card1"
@@ -190,8 +204,8 @@
             android:layout_marginLeft="10dp"
             android:text="5" >
         </TextView>
-    </LinearLayout>
-    
+    </LinearLayout> -->
+
     <FrameLayout
         android:id="@+id/frame"
         android:layout_width="fill_parent"
@@ -217,8 +231,7 @@
                 android:id="@+id/skip_banker_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
+                android:layout_gravity="bottom|right"
                 android:text="不抢" />
             <Button
                 android:id="@+id/try_banker_image"
@@ -226,7 +239,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
                 android:text="抢庄" />
         </LinearLayout>
         <LinearLayout
@@ -241,7 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="10dp"
                 android:text="x1" />
             <Button
                 android:id="@+id/x5_image"
@@ -249,7 +261,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="10dp"
                 android:text="x5" />
            <Button
                 android:id="@+id/x10_image"
@@ -257,8 +269,46 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="30dp"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="10dp"
                 android:text="x10" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/card_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal" >
+            <ImageView
+                android:id="@+id/card1_image"
+                android:layout_width="57dp"
+                android:layout_height="75dp"
+                android:src="@drawable/card_big_01"
+                android:layout_gravity="center_vertical" />
+            <ImageView
+                android:id="@+id/card2_image"
+                android:layout_width="57dp"
+                android:layout_height="75dp"
+                android:src="@drawable/card_big_02"
+                android:layout_gravity="center_vertical" />
+            <ImageView
+                android:id="@+id/card3_image"
+                android:layout_width="57dp"
+                android:layout_height="75dp"
+                android:src="@drawable/card_big_03"
+                android:layout_gravity="center_horizontal" />
+            <ImageView
+                android:id="@+id/card4_image"
+                android:layout_width="57dp"
+                android:layout_height="75dp"
+                android:src="@drawable/card_big_04"
+                android:layout_gravity="center_horizontal" />
+            <ImageView
+                android:id="@+id/card5_image"
+                android:layout_width="57dp"
+                android:layout_height="75dp"
+                android:src="@drawable/card_big_05"
+                android:layout_gravity="center_horizontal" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/start_layout"

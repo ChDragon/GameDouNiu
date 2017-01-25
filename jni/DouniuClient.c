@@ -22,6 +22,7 @@ pthread_t thread;
 ClientUserInfo myInfo;
 ClientUserInfo otherUsers;
 int bankerIndex = 0;
+char retLoginCMD[MAXLINE] = "";
 
 char *time2str(long time, char* buf){
 	struct tm *t = localtime(&time);
@@ -58,7 +59,7 @@ int get_choice(){
 
 //send:CMD:FROM:TIME:DATA
 //recv:CMD:userid:TIME:DATA, userid即第几个
-int login(){
+int loginTest(){
 	char inputname[MAX_NAME_LEN] = "";
 	int ret = OK;
 	printf("username: \n");
@@ -126,7 +127,8 @@ int loginCMD(char *username, char *password)
 		strcpy(myInfo.name,username);
 		printf("userid:%d\n", userid);
 #ifdef USE_IN_ANDROID
-		loginCb(userid, data[OFT_DAT], strlen(data[OFT_DAT]));//tryBankerCb(name, strlen(name));//
+		//loginCb(userid, data[OFT_DAT], strlen(data[OFT_DAT]));
+		sprintf(retLoginCMD, "%d:%s", userid, data[OFT_DAT]);
 #endif
 		return OK;
     }
@@ -231,19 +233,19 @@ void tryingBankerCMD(int value)
 	myInfo.bankerStatus = TBS_TRYING;
 }
 
-void stakeCMD(int stake)
+void stakeCMD(int stakeValue)
 {
     char buff[MAXLINE];
-	sprintf(buff, "%c:%d:%ld:%d", CMD_STAKE, userid, time(NULL), stake);
+	sprintf(buff, "%c:%d:%ld:%d", CMD_STAKE, userid, time(NULL), stakeValue);
 	printf("[C->S][startPrepare]send buff: %s\n", buff);
 	write(sockfd,buff,strlen(buff));
-	myInfo.stake = stake;
+	myInfo.stake = stakeValue;
 }
 
-void playCMD(int niu)
+void playCMD(int niuValue)
 {
     char buff[MAXLINE];
-	sprintf(buff, "%c:%d:%ld:%d", CMD_PLAY, userid, time(NULL), niu);//pattern, points and maxCardValue
+	sprintf(buff, "%c:%d:%ld:%d", CMD_PLAY, userid, time(NULL), niuValue);
 	printf("[C->S][startPrepare]send buff: %s\n", buff);
 	write(sockfd,buff,strlen(buff));
 }
@@ -308,15 +310,14 @@ int connectServer(char *ipaddr)
 	return OK;
 }
 
-int connectServerAndLogin(char *ipaddr, char *username, char *password)
+char* connectServerAndLogin(char *ipaddr, char *username, char *password)
 {
 	printf("ipaddr[%s],username[%s],password[%s]\n", ipaddr, username, password);
-	int ret = OK;
-	ret = connectServer(ipaddr);
+	int ret = connectServer(ipaddr);
 	if (ret != OK)
 	{
 		printf("Connect [%s] fail.\n", ipaddr);
-		return ERR;
+		return "";
 	}
 
 	//账户登录并创建线程接收来自服务器的反馈
@@ -326,8 +327,23 @@ int connectServerAndLogin(char *ipaddr, char *username, char *password)
 	{
 		printf("login success, will create thread to receive response from server\n");
 		afterLoginCMD();
-		return OK;
+		return retLoginCMD;
 	}
+	return "";
+}
+
+int logoutAndExit(char *username)
+{
+	int ret = logoutCMD(username);
+	if (ret == OK)
+	{
+		printf("login quit by pthread_join\n");
+        pthread_join(thread, NULL);
+	}
+	else
+	{
+        printf("Not login quit\n");
+    }
 	return ret;
 }
 
@@ -422,9 +438,10 @@ void * receiver_looper(void * p){
 				break;
 			case CMD_S2C_WILL_START:
 				printf("[receiver_looper]CMD_S2C_WILL_START\n");
-				format_game_info(data[OFT_DAT]);
 #ifdef USE_IN_ANDROID
 				willStartCb(data[OFT_DAT], strlen(data[OFT_DAT]));
+#else
+				format_game_info(data[OFT_DAT]);
 #endif
 				break;
 
@@ -460,7 +477,7 @@ void * receiver_looper(void * p){
 
 int main()
 {
-    //if (connectServerAndLogin(DEFAULT_HOST_ADDR, "test", "123") != OK)
+    //if (connectServerAndLogin(DEFAULT_HOST_ADDR, "test", "123") == "")
     if (connectServer(DEFAULT_HOST_ADDR) != OK)
     {
 		printf("Occur some error, need exit.\n");
@@ -473,7 +490,7 @@ int main()
         //printf("main loop\n");
         switch(get_choice()){
         case 'i':
-            login();
+            loginTest();
             //while(pthread_create(&thread, NULL, receiver_looper, NULL) < 0);
             break;
         case 'l':
@@ -485,14 +502,7 @@ int main()
             }
             break;
         case 'o':
-            if(logoutCMD(name) == OK){
-				printf("login quit by pthread_join\n");
-                pthread_join(thread, NULL);
-                return 0;
-            }else{
-                printf("Not login quit\n");
-                return 0;
-            }
+			logoutAndExit(name);
             break;
         case 'c':
             //chat();

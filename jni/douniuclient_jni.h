@@ -19,18 +19,29 @@
 extern "C" {
 #endif
 
-jstring native_hello( JNIEnv* env, jobject thiz );
+jstring native_hello(JNIEnv* env, jobject thiz);
 jboolean nativeInit(JNIEnv *env, jobject thiz);
 jboolean nativeStop(JNIEnv *env, jobject thiz);
-jint nativeConnectAndLogin( JNIEnv* env,
+jstring nativeConnectAndLogin(JNIEnv* env,
                             jobject thiz, jstring ipaddr,
                             jstring username, jstring password);
+jint nativeLogoutAndExit(JNIEnv* env, jobject thiz, jstring username);
+void nativePrepareCMD(JNIEnv* env, jobject thiz);
+void nativeTryingBankerCMD(JNIEnv* env, jobject thiz, jint value);
+void nativeStakeCMD(JNIEnv* env, jobject thiz, jint stakeValue);
+void nativePlayCMD(JNIEnv* env, jobject thiz, jint niuValue);
 
-extern int connectServerAndLogin(char *ipaddr, char *username, char *password);
+extern char* connectServerAndLogin(char *ipaddr, char *username, char *password);
+extern int logoutAndExit(char *username);
+extern void prepareCMD();
+extern void tryingBankerCMD(int value);
+extern void stakeCMD(int stakeValue);
+extern void playCMD(int niuValue);
 
 extern void loginCb(int userid, char *data, int datalen);
 extern void otherLoginCb(char *data, int datalen);
 extern void logoutCb(int value);
+extern void otherLogoutCb(int value);
 extern void prepareCb(char *data, int datalen);
 extern void otherUserPrepareCb(char *data, int datalen);
 extern void willBankerCb(char *data, int datalen);

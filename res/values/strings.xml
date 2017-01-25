@@ -18,4 +18,13 @@
     <string name="str_five_hua">5 hua</string>
     <string name="str_four_hua">4 hua</string>
     <string name="str_zha_dan">zha dan</string>
+    
+    <string name="STR_ACCOUNT">Account</string>
+    <string name="STR_PASSWORD">Password</string>
+    <string name="STR_MONEY">Money</string>
+    
+    <string name="STR_ONLINE_GAME">Account Login</string>
+    <string name="STR_OFFLINE_GAME">Offline Practice</string>
+    
+    <string name="STR_WAIT_TO_STAKE">Please wait others to stake...</string>
 </resources>

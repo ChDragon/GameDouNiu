@@ -16,4 +16,13 @@
     <string name="str_five_hua">五花牛</string>
     <string name="str_four_hua">四花牛</string>
     <string name="str_zha_dan">炸弹</string>
+    
+    <string name="STR_ACCOUNT">账户</string>
+    <string name="STR_PASSWORD">密码</string>
+    <string name="STR_MONEY">金币</string>
+    
+    <string name="STR_ONLINE_GAME">账户登录</string>
+    <string name="STR_OFFLINE_GAME">单机练习</string>
+    
+    <string name="STR_WAIT_TO_STAKE">其他用户正下注，请等待...</string>
 </resources>

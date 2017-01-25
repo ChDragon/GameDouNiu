@@ -6,17 +6,30 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.game.douniu.R;
+
+import android.content.Context;
 import android.util.Log;
 
 public class DouNiuRule {
 	private static String TAG = "[wzj]DouNiuRule";
 	
-	public static final int POKER_PATTERN_WU_NIU = 1;			//鏃犵墰
-	public static final int POKER_PATTERN_YOU_NIU = 2;		//鏈夌墰锛屽鐗�锛岀墰2绛�	
-	public static final int POKER_PATTERN_NIU_NIU = 3;		//鐗涚墰
-	public static final int POKER_PATTERN_FOUR_HUA = 4;		//鍥涜姳锛屼竴寮犱负10锛屽叾浣欏潎涓鸿姳鐗岋紝濡�0,J,J,Q,Q
-	public static final int POKER_PATTERN_FIVE_HUA = 5;		//浜旇姳锛屽叏閮ㄤ负鑺辩墝锛屽J,J,Q,Q,K
-	public static final int POKER_PATTERN_ZHA_DAN = 5;		//鐐稿脊锛屽嵆4寮犵墝涓�紶锛屽A,5,5,5,5
+	public static final int POKER_PATTERN_WU_NIU = 0;			//鏃犵墰
+	public static final int POKER_PATTERN_NIU_1 = 1;
+	public static final int POKER_PATTERN_NIU_2 = 2;
+	public static final int POKER_PATTERN_NIU_3 = 3;
+	public static final int POKER_PATTERN_NIU_4 = 4;
+	public static final int POKER_PATTERN_NIU_5 = 5;
+	public static final int POKER_PATTERN_NIU_6 = 6;
+	public static final int POKER_PATTERN_NIU_7 = 7;
+	public static final int POKER_PATTERN_NIU_8 = 8;
+	public static final int POKER_PATTERN_NIU_9 = 9;
+	public static final int POKER_PATTERN_NIU_NIU = 10;
+	//public static final int POKER_PATTERN_YOU_NIU = 2;		//鏈夌墰锛屽鐗�锛岀墰2绛�	
+	public static final int POKER_PATTERN_FOUR_HUA = 20;		//鍥涜姳锛屼竴寮犱负10锛屽叾浣欏潎涓鸿姳鐗岋紝濡�0,J,J,Q,Q
+	public static final int POKER_PATTERN_FIVE_HUA = 30;		//浜旇姳锛屽叏閮ㄤ负鑺辩墝锛屽J,J,Q,Q,K
+	public static final int POKER_PATTERN_ZHA_DAN = 40;		//鐐稿脊锛屽嵆4寮犵墝涓�紶锛屽A,5,5,5,5
+	
 	
 	public static final int STAKE_UNIT = 10;					//璧屾敞鍗曚綅锛�0鍏�	
 	public static final int DEFAULT_STAKE = STAKE_UNIT * 1;	//榛樿璧屾敞10鍏�	
@@ -161,6 +174,75 @@ public class DouNiuRule {
 		}
 		
 		return max;
+	}
+	
+	public static String getResultStr(Context context, int pokerPattern) {
+		Log.v(TAG, "[getResultStr]pokerPattern:"+pokerPattern);
+		String ret = "wuniu";
+		switch (pokerPattern) {
+		case DouNiuRule.POKER_PATTERN_WU_NIU:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_WU_NIU");
+			ret = context.getResources().getString(R.string.str_no_niu);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_1:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_1");
+			ret = context.getResources().getString(R.string.str_niu_1);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_2:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_2");
+			ret = context.getResources().getString(R.string.str_niu_2);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_3:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_3");
+			ret = context.getResources().getString(R.string.str_niu_3);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_4:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_4");
+			ret = context.getResources().getString(R.string.str_niu_4);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_5:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_5");
+			ret = context.getResources().getString(R.string.str_niu_5);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_6:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_6");
+			ret = context.getResources().getString(R.string.str_niu_6);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_7:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_7");
+			ret = context.getResources().getString(R.string.str_niu_7);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_8:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_8");
+			ret = context.getResources().getString(R.string.str_niu_8);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_9:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_9");
+			ret = context.getResources().getString(R.string.str_niu_9);
+			break;
+		case DouNiuRule.POKER_PATTERN_NIU_NIU:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_NIU_NIU");
+			ret = context.getResources().getString(R.string.str_niu_niu);
+			break;
+		case DouNiuRule.POKER_PATTERN_FOUR_HUA:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_FOUR_HUA");
+			ret = context.getResources().getString(R.string.str_four_hua);
+			break;
+		case DouNiuRule.POKER_PATTERN_FIVE_HUA:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_FIVE_HUA");
+			ret = context.getResources().getString(R.string.str_five_hua);
+			break;
+		case DouNiuRule.POKER_PATTERN_ZHA_DAN:
+			Log.v(TAG, "[getResultStr]POKER_PATTERN_ZHA_DAN");
+			ret = context.getResources().getString(R.string.str_zha_dan);
+			break;	
+		default:
+			Log.v(TAG, "[getResultStr]default");
+			ret = context.getResources().getString(R.string.str_no_niu);
+			break;
+		}
+		Log.v(TAG, "[getResultStr]ret:"+ret);
+		return ret;
 	}
 	
 }

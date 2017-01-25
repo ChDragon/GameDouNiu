@@ -10,21 +10,33 @@ import android.content.Context;
 public class Player {
 	private Context context;
 	
+	private int userid;
 	private String username;		//鐢ㄦ埛鍚�   
-	private int money;				//鏈挶
+	private long money;				//鏈挶
     
     private List<Card> cards;		//鎷垮埌鐨�寮犵墝
     private int pokerPattern;		//鐗屽瀷锛屽鐐稿脊锛屼簲鑺憋紝鐗涚墰锛屾湁鐗涳紝鏃犵墰
     private int points;			//鐐规暟
     private int maxCardValue;		//濡傛灉鏄墰鐗涙垨鏈夌墰浣嗙偣鏁颁竴鏍峰ぇ锛屾瘮杈冩渶澶х殑閭ｅ紶鐗�   
     private String resultStr;		//鏂楃墰缁撴灉瀛楃涓�    
-    private boolean isBanker;		//鏄惁搴勫
     private int stake;				//璧屾敞锛屽崟浣嶆槸STAKE_UNIT
+    private boolean isBanker;		//鏄惁搴勫
+    private boolean isReady;
+    private boolean isStake;
  
 	public Player(Context context, String username) {
 		this.context = context;
+		this.userid = 0;
 		this.username = username;
 		this.money = 10000;
+		initialize();
+	}
+	
+	public Player(Context context, int userid, String username, long money) {
+		this.context = context;
+		this.userid = userid;
+		this.username = username;
+		this.money = money;
 		initialize();
 	}
 	
@@ -40,11 +52,21 @@ public class Player {
 		pokerPattern = DouNiuRule.POKER_PATTERN_WU_NIU;
 		points = 0;
 		maxCardValue = 0;
-		isBanker = false;
-		stake = DouNiuRule.STAKE_UNIT;
 		resultStr = context.getResources().getString(R.string.str_no_niu);
+		stake = DouNiuRule.STAKE_UNIT;
+		isBanker = false;
+		isReady = false;
+		isStake = false;
 	}
 
+	public int getUserid() {
+		return userid;
+	}
+	
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -53,15 +75,15 @@ public class Player {
 		this.username = username;
 	}
 	
-	public int getMoney() {
+	public long getMoney() {
 		return money;
 	}
 	
-	public void setMoney(int money) {
+	public void setMoney(long money) {
 		this.money = money;
 	}
-	
-	public void betStake(int count) {
+
+	public void setStake(int count) {
 		stake = DouNiuRule.STAKE_UNIT * count;
 	}
 	
@@ -69,6 +91,30 @@ public class Player {
 		return stake;
 	}
 	
+	public boolean isBanker() {
+		return isBanker;
+	}
+
+	public void setBanker(boolean isBanker) {
+		this.isBanker = isBanker;
+	}
+	
+	public boolean isReady() {
+		return isReady;
+	}
+
+	public void setReady(boolean isReady) {
+		this.isReady = isReady;
+	}
+
+	public boolean isStake() {
+		return isStake;
+	}
+
+	public void setIsStake(boolean isStake) {
+		this.isStake = isStake;
+	}
+
 	public void pushCard(Card card) {
 		cards.add(card);
 	}
@@ -77,6 +123,10 @@ public class Player {
 		return cards;
 	}
 	
+	public void setPokerPattern(int pokerPattern) {
+		this.pokerPattern = pokerPattern;
+	}
+
 	public int getPokerPattern() {
 		return pokerPattern;
 	}
@@ -93,77 +143,64 @@ public class Player {
 		return resultStr;
 	}
 	
-	private String getResultStr(int points) {
-		String ret = "";
-		switch (points) {
-		case 1:
-			ret = context.getResources().getString(R.string.str_niu_1);
-			break;
-		case 2:
-			ret = context.getResources().getString(R.string.str_niu_2);
-			break;
-		case 3:
-			ret = context.getResources().getString(R.string.str_niu_3);
-			break;
-		case 4:
-			ret = context.getResources().getString(R.string.str_niu_4);
-			break;
-		case 5:
-			ret = context.getResources().getString(R.string.str_niu_5);
-			break;
-		case 6:
-			ret = context.getResources().getString(R.string.str_niu_6);
-			break;
-		case 7:
-			ret = context.getResources().getString(R.string.str_niu_7);
-			break;
-		case 8:
-			ret = context.getResources().getString(R.string.str_niu_8);
-			break;
-		case 9:
-			ret = context.getResources().getString(R.string.str_niu_9);
-			break;
-		case 10:
-			ret = context.getResources().getString(R.string.str_niu_niu);
-			break;
-		case 0:
-		default:
-			ret = context.getResources().getString(R.string.str_no_niu);
-			break;
-		}
-		return ret;
-	}
-	
 	// 
 	public void calculateResult() {
 		maxCardValue = DouNiuRule.getMaxCardValue(cards);
 		if (DouNiuRule.checkZhaDan(cards) == true) {//鐐稿脊
 			pokerPattern = DouNiuRule.POKER_PATTERN_ZHA_DAN;
-			resultStr = context.getResources().getString(R.string.str_zha_dan);
 		} else if (DouNiuRule.checkFiveHua(cards) == true) {//浜旇姳
 			pokerPattern = DouNiuRule.POKER_PATTERN_FIVE_HUA;
-			resultStr = context.getResources().getString(R.string.str_five_hua);
 		} else if (DouNiuRule.checkFourHua(cards) == true) {//鍥涜姳
 			pokerPattern = DouNiuRule.POKER_PATTERN_FOUR_HUA;
-			resultStr = context.getResources().getString(R.string.str_four_hua);
 		} else {//涓嶆槸鐗规畩鐗屽瀷
 			points = DouNiuRule.calculatePoints(cards);
-			resultStr = getResultStr(points);
-			if (points == 10) {
-				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_NIU;//鐗涚墰
-			} else if (points == 0) {
-				pokerPattern = DouNiuRule.POKER_PATTERN_WU_NIU;//鏃犵墰
-			} else {
-				pokerPattern = DouNiuRule.POKER_PATTERN_YOU_NIU;//鏈夌墰
+			switch(points)
+			{
+			case 0:
+				pokerPattern = DouNiuRule.POKER_PATTERN_WU_NIU;
+				break;
+			case 1:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_1;
+				break;
+			case 2:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_2;
+				break;
+			case 3:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_3;
+				break;
+			case 4:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_4;
+				break;
+			case 5:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_5;
+				break;
+			case 6:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_6;
+				break;
+			case 7:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_7;
+				break;
+			case 8:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_8;
+				break;
+			case 9:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_9;
+				break;
+			case 10:
+				pokerPattern = DouNiuRule.POKER_PATTERN_NIU_NIU;
+				break;
+			default:
+				break;
 			}
 		}
+		resultStr = DouNiuRule.getResultStr(context, pokerPattern);
 	}
 	
 
 	
 	@Override
 	public String toString() {
-		String str = "Player [";
+		String str = "Player [userid="+userid+" username="+username+" ";
 		for (int i=0;i<cards.size();i++) {
 			str += cards.get(i).toString() +"; ";
 		}

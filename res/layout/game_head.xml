@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <!-- wrap_content -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/head_t" >
+
+        <TextView
+            android:id="@+id/game_head_txt_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:hint="@string/STR_ACCOUNT"
+            android:padding="2dip"
+            android:singleLine="true"
+            android:textSize="10sp"
+            android:textColor="#ff00ff00" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_weight="1"
+        android:background="@drawable/head_m" >
+
+        <ImageView
+            android:id="@+id/game_head_img_head"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/role_1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/head_b"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/game_head_img_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="2dip"
+            android:background="@drawable/money_flag" />
+
+        <TextView
+            android:id="@+id/game_head_txt_point"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:hint="@string/STR_MONEY"
+            android:paddingRight="4dip"
+            android:singleLine="true"
+            android:textSize="8sp"
+            android:textColor="#fff0f000" />
+    </LinearLayout>
+
+</LinearLayout>

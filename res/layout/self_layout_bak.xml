@@ -1,0 +1,140 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    
+    <!-- android:layout_gravity="center|bottom" -->
+    <LinearLayout
+        android:id="@+id/card_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal" >
+        <ImageView
+            android:id="@+id/card1_image"
+            android:layout_width="57dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/card_big_01" />
+        <ImageView
+            android:id="@+id/card2_image"
+            android:layout_width="57dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/card_big_02" />
+        <ImageView
+            android:id="@+id/card3_image"
+            android:layout_width="57dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/card_big_03" />
+        <ImageView
+            android:id="@+id/card4_image"
+            android:layout_width="57dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/card_big_04" />
+        <ImageView
+            android:id="@+id/card5_image"
+            android:layout_width="57dp"
+            android:layout_height="75dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/card_big_05" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/start_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical" >
+        <Button
+            android:id="@+id/you_niu_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="15dp"
+            android:text="有牛" />
+        <Button
+            android:id="@+id/wu_niu_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="5dp"
+            android:text="无牛" />
+    </LinearLayout>
+    
+    <RelativeLayout
+        android:id="@+id/control_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/card_layout"
+        android:layout_marginBottom="10dp"
+        android:layout_centerHorizontal="true"
+         >
+        <Button
+            android:id="@+id/prepare_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:text="准备" />
+        <LinearLayout
+            android:id="@+id/try_banker_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/skip_banker_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:text="不抢" />
+            <Button
+                android:id="@+id/try_banker_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:text="抢庄" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/stake_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
+            <Button
+                android:id="@+id/x1_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="x1" />
+            <Button
+                android:id="@+id/x5_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:text="x5" />
+           <Button
+                android:id="@+id/x10_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="30dp"
+                android:text="x10" />
+        </LinearLayout>
+    </RelativeLayout>
+    
+
+
+</RelativeLayout>
